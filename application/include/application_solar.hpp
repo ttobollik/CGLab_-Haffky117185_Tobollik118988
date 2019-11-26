@@ -4,6 +4,8 @@
 #include "application.hpp"
 #include "model.hpp"
 #include "structs.hpp"
+#include "geometry_node.hpp"
+#include "node.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -22,6 +24,11 @@ class ApplicationSolar : public Application {
 
   // draw all objects
   void render() const;
+
+
+  // Function that creates planets (by hand)
+  void createPlanetSystem() const;
+  void drawGraph(std::vector<std::shared_ptr<Node>> children) const;
 
  protected:
   void initializeShaderPrograms();

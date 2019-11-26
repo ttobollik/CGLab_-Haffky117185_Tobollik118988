@@ -73,126 +73,52 @@ void ApplicationSolar::createPlanetSystem() const{
   auto root_pointer = std::make_shared<Node>(root);
   SceneGraph scene = SceneGraph("scene", root_pointer);
 
-  //Constructor for Geometry Nodes (parent, name, size, speed, position, model.obj)
+  //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
   GeometryNode sun{root_pointer, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
   root_pointer->addChild(sun_pointer);
 
 
-
-  GeometryNode merkury{root_pointer, "merkury"}; 
-  merkury.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  merkury.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 20.0f}); //last element for size
-  merkury.setPosition({11.0f, 0.0f, 0.0f});
-  merkury.setSpeed(1.2f); //high number --> faster because multiplied with time in render
+  GeometryNode merkury{root_pointer, "merkury", 20.0f, 1.2f, {11.0f, 0.0f, 0.0f}, planet_model}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
-
   root_pointer->addChild(merkury_pointer);
 
 
-  GeometryNode venus{root_pointer, "venus"}; 
-  venus.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  venus.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 17.0f}); //last element for size
-  venus.setPosition({13.0f, 0.0f, 0.0f});
-  venus.setSpeed(1.0f); 
+  GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   root_pointer->addChild(venus_pointer);
 
-  GeometryNode earth{root_pointer, "earth"}; 
-  earth.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  earth.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 15.0f}); //last element for size
-  earth.setPosition({14.0f, 0.0f, 0.0f});
-  earth.setSpeed(1.2f);
+  GeometryNode earth{root_pointer, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   root_pointer->addChild(earth_pointer);
 
 
-  GeometryNode moon{earth_pointer, "moon"}; 
-  moon.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  moon.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 2.0f}); //last element for size
-  moon.setPosition({4.0f, 0.0f, 0.0f});
-  moon.setSpeed(1.8f);
+  GeometryNode moon{earth_pointer, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
   auto moon_pointer = std::make_shared<GeometryNode>(moon);
   earth_pointer->addChild(moon_pointer);
 
   
-  GeometryNode mars{root_pointer, "mars"}; 
-  mars.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  mars.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 15.0f}); //last element for size
-  mars.setPosition({15.0f, 0.0f, 0.0f});
-  mars.setSpeed(0.1f);
+  GeometryNode mars{root_pointer, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
   auto mars_pointer = std::make_shared<GeometryNode>(mars);
   root_pointer->addChild(mars_pointer);
 
   
-  GeometryNode jupiter{root_pointer, "jupiter"}; 
-  jupiter.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  jupiter.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 7.0f}); //last element for size
-  jupiter.setPosition({11.0f, 0.0f, 0.0f});
-  jupiter.setSpeed(0.3f);
+  GeometryNode jupiter{root_pointer, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   root_pointer->addChild(jupiter_pointer);
 
 
-  GeometryNode saturn{root_pointer, "saturn"}; 
-  saturn.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  saturn.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 10.0f}); //last element for size
-  saturn.setPosition({16.0f, 0.0f, 0.0f});
-  saturn.setSpeed(0.8f);
+  GeometryNode saturn{root_pointer, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   root_pointer->addChild(saturn_pointer);
 
 
-  GeometryNode uranus{root_pointer, "uranus"}; 
-  uranus.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  uranus.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 12.0f}); //last element for size
-  uranus.setPosition({28.0f, 0.0f, 0.0f});
-  uranus.setSpeed(0.4f);
+  GeometryNode uranus{root_pointer, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   root_pointer->addChild(uranus_pointer);
 
   
-  GeometryNode neptune{root_pointer, "neptune"}; 
-  neptune.setGeometry(planet_model);
-  //set a transformation for the sun and make a pointer
-  neptune.setLocalTransform(glm::fmat4{1.0f, 0.0f, 0.0f, 0.0f, 
-                                   0.0f, 1.0f, 0.0f, 0.0f,
-                                   0.0f, 0.0f, 1.0f, 0.0f, 
-                                   0.0f, 0.0f, 0.0f, 13.0f}); //last element for size
-  neptune.setPosition({34.0f, 0.0f, 0.0f});
-  neptune.setSpeed(0.1f);
+  GeometryNode neptune{root_pointer, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   root_pointer->addChild(neptune_pointer);
 
