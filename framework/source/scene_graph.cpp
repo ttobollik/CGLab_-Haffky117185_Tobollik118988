@@ -45,6 +45,8 @@ void SceneGraph::printGraph(){
 	graphPrinter(root, depth);
 }
 
+
+//helper function for recursion. Could be avoided if we add a queue and to iteratively
 void SceneGraph::graphPrinter(std::shared_ptr<Node> const& node, int depth) {
 	//creating emptyspace, depending on depth of node
 	for (int index = 0; index < depth; ++index) {

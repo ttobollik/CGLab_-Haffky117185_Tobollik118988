@@ -60,6 +60,8 @@ void ApplicationSolar::render() const {
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL); 
   ***/
   glUseProgram(m_shaders.at("planet").handle);
+
+  //calling the function to create planets
   createPlanetSystem();
 
 }
@@ -72,83 +74,88 @@ void ApplicationSolar::createPlanetSystem() const{
 
   // creating an empty root node with nullptr as parent, named /, path / and 0 depth
   Node root{nullptr, "/"};
-  auto root_pointer = std::make_shared<Node>(root);
-  SceneGraph scene = SceneGraph("scene", root_pointer);
+  auto root_holder = std::make_shared<Node>(root);
+  SceneGraph scene = SceneGraph("scene", root_holder);
 
   //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
   //sun
-  GeometryNode sun{root_pointer, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
-  auto sun_pointer = std::make_shared<GeometryNode>(sun);
-  root_pointer->addChild(sun_pointer);
+  GeometryNode sun{root_holder, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
+  auto sun_holder = std::make_shared<GeometryNode>(sun);
+  root_holder->addChild(sun_holder);
 
   //merkury
-  GeometryNode merkury{root_pointer, "merkury", 20.0f, 1.2f, {11.0f, 0.0f, 0.0f}, planet_model}; 
-  auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
-  root_pointer->addChild(merkury_pointer);
+  GeometryNode merkury{root_holder, "merkury", 20.0f, 1.2f, {11.0f, 0.0f, 0.0f}, planet_model}; 
+  auto merkury_holder = std::make_shared<GeometryNode>(merkury);
+  root_holder->addChild(merkury_holder);
 
   //venus
-  GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
-  auto venus_pointer = std::make_shared<GeometryNode>(venus);
-  root_pointer->addChild(venus_pointer);
+  GeometryNode venus{root_holder, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
+  auto venus_holder = std::make_shared<GeometryNode>(venus);
+  root_holder->addChild(venus_holder);
 
   //earth
-  GeometryNode earth{root_pointer, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
-  auto earth_pointer = std::make_shared<GeometryNode>(earth);
-  root_pointer->addChild(earth_pointer);
+  GeometryNode earth{root_holder, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
+  auto earth_holder = std::make_shared<GeometryNode>(earth);
+  root_holder->addChild(earth_holder);
 
   //moon
-  GeometryNode moon{earth_pointer, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
-  auto moon_pointer = std::make_shared<GeometryNode>(moon);
-  earth_pointer->addChild(moon_pointer); //adds moon to child of earth not root
+  GeometryNode moon{earth_holder, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
+  auto moon_holder = std::make_shared<GeometryNode>(moon);
+  earth_holder->addChild(moon_holder); //adds moon to child of earth not root
 
   //mars
-  GeometryNode mars{root_pointer, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
-  auto mars_pointer = std::make_shared<GeometryNode>(mars);
-  root_pointer->addChild(mars_pointer);
+  GeometryNode mars{root_holder, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
+  auto mars_holder = std::make_shared<GeometryNode>(mars);
+  root_holder->addChild(mars_holder);
 
   //jupiter
-  GeometryNode jupiter{root_pointer, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
-  auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
-  root_pointer->addChild(jupiter_pointer);
+  GeometryNode jupiter{root_holder, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
+  auto jupiter_holder = std::make_shared<GeometryNode>(jupiter);
+  root_holder->addChild(jupiter_holder);
 
   //saturn
-  GeometryNode saturn{root_pointer, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
-  auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
-  root_pointer->addChild(saturn_pointer);
+  GeometryNode saturn{root_holder, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
+  auto saturn_holder = std::make_shared<GeometryNode>(saturn);
+  root_holder->addChild(saturn_holder);
 
   //uranus
-  GeometryNode uranus{root_pointer, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
-  auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
-  root_pointer->addChild(uranus_pointer);
+  GeometryNode uranus{root_holder, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
+  auto uranus_holder = std::make_shared<GeometryNode>(uranus);
+  root_holder->addChild(uranus_holder);
 
   //neptune
-  GeometryNode neptune{root_pointer, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
-  auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
-  root_pointer->addChild(neptune_pointer);
+  GeometryNode neptune{root_holder, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
+  auto neptune_holder = std::make_shared<GeometryNode>(neptune);
+  root_holder->addChild(neptune_holder);
 
-
+  //calling to print the sceneGraph. Currently keeps printing. Ideally print once,
   scene.printGraph();
-  drawGraph(root_pointer->getChildrenList());
+
+  //calling function to draw the objects (transform from object to world space and send to GPU)
+  //giving children to be recursive -> maybe changing to iterative and giving the scene itself
+  drawGraph(root_holder->getChildrenList());
 }
 
-//gets vector of pointers to children and draws graph
+//gets vector of pointers to children and draws everything in the scenegraph, which is below the root
 void ApplicationSolar::drawGraph(std::vector<std::shared_ptr<Node>> children) const{
-  //std::cout<<merkury_pointer->hasChild("earth")<<std::endl;
 
-
-  if (children.size()>0){
+  //for all children we want to transform and bring into world space and then ask GPU to draw
+  if (children.size()>0){ //maybe unnecessary, should be removed afterwards
     for (auto const& child : children) {
-
+      //creating identity matrix to perform transformation on
         glm::fmat4 model_matrix = glm::fmat4{1.0};
-        //if node is not first child of root/sun, but child of different planet (earth --> moon)
+
+        //model transform
+        //if node is not first child of root/sun, but child of different planet (earth --> moon) we have to transform with parents transformation matrix to get into model space
         if(child->getDepth() >= 2){
             model_matrix = child->getParent()->getLocalTransform();
-            model_matrix = glm::rotate(model_matrix, float(glfwGetTime())*(child->getParent()->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet itself
-            model_matrix = glm::translate(model_matrix, child->getParent()->getPosition()); //translation arround parent
+            model_matrix = glm::rotate(model_matrix, float(glfwGetTime())*(child->getParent()->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
+            model_matrix = glm::translate(model_matrix, child->getParent()->getPosition()); //translation around parent
         }
         
-        model_matrix = glm::rotate(model_matrix * child->getLocalTransform(),float(glfwGetTime()) * child->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet itself
-        model_matrix = glm::translate(model_matrix, child->getPosition()); //translation arrounf parrent/sun
+        //world transform first rotate then translate, because order makes a difference! 
+        model_matrix = glm::rotate(model_matrix * child->getLocalTransform(),float(glfwGetTime()) * child->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
+        model_matrix = glm::translate(model_matrix, child->getPosition()); //translation 
 
         // extra matrix for normal transformation to keep them orthogonal to surface
         glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
@@ -163,6 +170,8 @@ void ApplicationSolar::drawGraph(std::vector<std::shared_ptr<Node>> children) co
 
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+
+        //recursively calls function for children 
         if(child->getChildrenList().size()>0) {
           drawGraph(child->getChildrenList());
         }
@@ -247,7 +256,7 @@ void ApplicationSolar::initializeGeometry() {
 
 
 ///////////////////////////// callback functions for window events ////////////
-// handle key input
+// handle key input: W,S for Zoom and arrow keys for positioning
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
   if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.3f}); //transforms view on w key press -3 in z direction (zooms in)
@@ -272,14 +281,15 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 
 }
 
-//handle delta mouse movement input
+//handle delta mouse movement input: rotation of view --> not perfect yet. better would be a rotation around the center of screen! 
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
     float horizontal_rotate = float(pos_x/20); //divide to slow down
     float vertical_rotate = float(pos_y/20);
 
     //glm rotate transforms a matrix 4x4, created from axis of 3 scalars and angle in degree (glm::radians). Scalars define the axis for rotation
-    m_view_transform = glm::rotate(m_view_transform, glm::radians(horizontal_rotate), glm::vec3{0,1,0});
-    m_view_transform = glm::rotate(m_view_transform, glm::radians(vertical_rotate), glm::vec3{1,0,0});
+    m_view_transform = glm::rotate(m_view_transform, glm::radians(vertical_rotate), glm::vec3{1.0f,0.0f,0.0f});
+    m_view_transform = glm::rotate(m_view_transform, glm::radians(horizontal_rotate), glm::vec3{0.0f,1.0f,0.0f});
+
 
     uploadView();
 }

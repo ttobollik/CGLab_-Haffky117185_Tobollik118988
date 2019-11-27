@@ -5,6 +5,11 @@
 #include <vector>
 #include <memory>
 
+/*
+Node which models transformations existing for all types of nodes (transform, name etc.)
+*/
+
+
 class Node {
 public:
 	//constructors
@@ -29,9 +34,9 @@ public:
 	std::string getName() const; //name of node
 	std::string getPath() const; //path, where the node is
 	int getDepth() const; //depth, where the node is on the graph
-	glm::mat4 getLocalTransform() const;
-	glm::mat4 getWorldTransform() const;
-	glm::fvec3 getPosition() const;
+	glm::mat4 getLocalTransform() const; //Transformation Matrix in Object Space
+	glm::mat4 getWorldTransform() const; //Transformation Matrix in World Space
+	glm::fvec3 getPosition() const; 
 	float getSpeed() const; 
 
 	void setLocalTransform(glm::mat4 const& transform);
@@ -39,10 +44,10 @@ public:
 	void addChild(std::shared_ptr<Node> const& node);
 	std::shared_ptr<Node> removeChild(std::string const& node);
 	bool hasChild(std::string const& name);
-	void setPosition(glm::fvec3 const& position);
-	void setSpeed(float speed);
+	void setPosition(glm::fvec3 const& position); //setting position and multiplying in translation before drawing
+	void setSpeed(float speed); //setting speed and multiplying before drawing
 
-	virtual std::ostream& print(std::ostream& os) const;
+	virtual std::ostream& print(std::ostream& os) const; //little helper for Debugging
 	
 protected:
 	std::shared_ptr<Node> parent_;
@@ -58,5 +63,5 @@ protected:
 };
 
 
-std::ostream& operator<<(std::ostream& os, Node const& n);
+std::ostream& operator<<(std::ostream& os, Node const& n);  //little helper for Debugging
 #endif

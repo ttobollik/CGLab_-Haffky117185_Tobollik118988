@@ -26,8 +26,10 @@ class ApplicationSolar : public Application {
   void render() const;
 
 
-  // Function that creates planets (by hand)
+  // Function that creates multiple planets (by hand)
   void createPlanetSystem() const;
+  // Function that rekursively traverses the graph and sends objects to GPU -> is called by createPlanetSystem
+  // (maybe implement iterativle through queue, to reduce time?)
   void drawGraph(std::vector<std::shared_ptr<Node>> children) const;
 
  protected:

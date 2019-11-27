@@ -3,6 +3,10 @@
 #include <node.hpp>
 #include <model.hpp>
 
+/*
+Geometry Node inherits from Node and we can set Geometry (usually obj file)
+*/
+
 class GeometryNode : public Node {
 	public:
 		//default contructor

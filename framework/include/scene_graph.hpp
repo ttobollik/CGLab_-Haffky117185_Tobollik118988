@@ -5,6 +5,11 @@
 #include "node.hpp"
 #include <memory>
 
+
+/*
+Scenegraph which saves a node. This is the root node of the graph. From there, shared pointer to children are saved.
+*/
+
 class SceneGraph {
 public:
 	//static SceneGraph* getInstance(std::string name, std::shared_ptr<Node> root);
@@ -20,7 +25,7 @@ public:
 	void printGraph();
 
 private:
-	//setter
+	//setter are private because of Singleton
 	void setName(std::string const& name);
 	void setRoot(std::shared_ptr<Node> const& root); //root node of scene graph
 	
