@@ -20,6 +20,7 @@ using namespace gl;
 
 #include <iostream>
 
+//constructor
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
@@ -30,6 +31,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeShaderPrograms();
 }
 
+//destructor
 ApplicationSolar::~ApplicationSolar() {
   glDeleteBuffers(1, &planet_object.vertex_BO);
   glDeleteBuffers(1, &planet_object.element_BO);
@@ -74,50 +76,52 @@ void ApplicationSolar::createPlanetSystem() const{
   SceneGraph scene = SceneGraph("scene", root_pointer);
 
   //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
+  //sun
   GeometryNode sun{root_pointer, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
   root_pointer->addChild(sun_pointer);
 
-
+  //merkury
   GeometryNode merkury{root_pointer, "merkury", 20.0f, 1.2f, {11.0f, 0.0f, 0.0f}, planet_model}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   root_pointer->addChild(merkury_pointer);
 
-
+  //venus
   GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   root_pointer->addChild(venus_pointer);
 
+  //earth
   GeometryNode earth{root_pointer, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   root_pointer->addChild(earth_pointer);
 
-
+  //moon
   GeometryNode moon{earth_pointer, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
   auto moon_pointer = std::make_shared<GeometryNode>(moon);
-  earth_pointer->addChild(moon_pointer);
+  earth_pointer->addChild(moon_pointer); //adds moon to child of earth not root
 
-  
+  //mars
   GeometryNode mars{root_pointer, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
   auto mars_pointer = std::make_shared<GeometryNode>(mars);
   root_pointer->addChild(mars_pointer);
 
-  
+  //jupiter
   GeometryNode jupiter{root_pointer, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   root_pointer->addChild(jupiter_pointer);
 
-
+  //saturn
   GeometryNode saturn{root_pointer, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   root_pointer->addChild(saturn_pointer);
 
-
+  //uranus
   GeometryNode uranus{root_pointer, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   root_pointer->addChild(uranus_pointer);
 
-  
+  //neptune
   GeometryNode neptune{root_pointer, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   root_pointer->addChild(neptune_pointer);
@@ -127,6 +131,7 @@ void ApplicationSolar::createPlanetSystem() const{
   drawGraph(root_pointer->getChildrenList());
 }
 
+//gets vector of pointers to children and draws graph
 void ApplicationSolar::drawGraph(std::vector<std::shared_ptr<Node>> children) const{
   //std::cout<<merkury_pointer->hasChild("earth")<<std::endl;
 
@@ -135,14 +140,15 @@ void ApplicationSolar::drawGraph(std::vector<std::shared_ptr<Node>> children) co
     for (auto const& child : children) {
 
         glm::fmat4 model_matrix = glm::fmat4{1.0};
+        //if node is not first child of root/sun, but child of different planet (earth --> moon)
         if(child->getDepth() >= 2){
             model_matrix = child->getParent()->getLocalTransform();
-            model_matrix = glm::rotate(model_matrix, float(glfwGetTime())*(child->getParent()->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f});
-            model_matrix = glm::translate(model_matrix, child->getParent()->getPosition());
+            model_matrix = glm::rotate(model_matrix, float(glfwGetTime())*(child->getParent()->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet itself
+            model_matrix = glm::translate(model_matrix, child->getParent()->getPosition()); //translation arround parent
         }
         
-        model_matrix = glm::rotate(model_matrix * child->getLocalTransform(),float(glfwGetTime()) * child->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f});
-        model_matrix = glm::translate(model_matrix, child->getPosition());
+        model_matrix = glm::rotate(model_matrix * child->getLocalTransform(),float(glfwGetTime()) * child->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet itself
+        model_matrix = glm::translate(model_matrix, child->getPosition()); //translation arrounf parrent/sun
 
         // extra matrix for normal transformation to keep them orthogonal to surface
         glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
@@ -244,23 +250,23 @@ void ApplicationSolar::initializeGeometry() {
 // handle key input
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
   if (key == GLFW_KEY_W  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.3f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, -0.3f}); //transforms view on w key press -3 in z direction (zooms in)
     uploadView();
   }
   else if (key == GLFW_KEY_S  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.3f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.0f, 0.3f}); //transforms view on s key press 3 in z direction (zooms out)
     uploadView();
   } else if (key == GLFW_KEY_UP  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, -0.3f, 0.0f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, -0.3f, 0.0f}); //transforms view on up key press -3 in y direction
     uploadView();
   } else if (key == GLFW_KEY_DOWN  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.3f, 0.0f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.3f, 0.0f}); //transforms view on up key press 3 in y direction
     uploadView();
   } else if (key == GLFW_KEY_LEFT  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.3f, 0.0f, 0.0f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.3f, 0.0f, 0.0f}); //transforms view on up key press -3 in x direction
     uploadView();
   } else if (key == GLFW_KEY_RIGHT  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-    m_view_transform = glm::translate(m_view_transform, glm::fvec3{-0.3f, 0.0f, 0.0f});
+    m_view_transform = glm::translate(m_view_transform, glm::fvec3{-0.3f, 0.0f, 0.0f}); //transforms view on up key press 3 in x direction
     uploadView();
   }
 

@@ -9,17 +9,20 @@ SceneGraph* SceneGraph::getInstance(std::string name, std::shared_ptr<Node> root
 	return scene_graph_instance_;
 }
 **/
-
+//constructor
 SceneGraph::SceneGraph(std::string name, std::shared_ptr<Node> root): 
 	name_{name},
 	root_{root} {}
 
+//destructor
 SceneGraph::~SceneGraph(){}
 
+//returns name as a string
 std::string const& SceneGraph::getName() {
 	return name_;
 }
 
+// returns pointer to root node
 std::shared_ptr<Node> const& SceneGraph::getRoot() {
 	return root_;
 }
@@ -32,6 +35,7 @@ void SceneGraph::setRoot(std::shared_ptr<Node> const& root){
 	root_ = root;
 }
 
+//prints graph starting at the root
 void SceneGraph::printGraph(){
 
 	std::shared_ptr<Node> root = getRoot();

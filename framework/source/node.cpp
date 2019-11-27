@@ -2,7 +2,8 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-
+//consructors
+//default
 Node::Node() : 
 	parent_{},
 	children_{},
@@ -24,9 +25,10 @@ Node::Node(std::shared_ptr<Node> parent, std::string const& name) :
 	worldTransform_{1.0f},
 	position_{},
 	speed_{1.0f} {
+		//if the node has a parent
 		if (parent != nullptr) {
-			depth_ = parent_->getDepth() + 1;
-			path_ = parent_->getPath() +"/"+name;
+			depth_ = parent_->getDepth() + 1; //calculates depth for new node
+			path_ = parent_->getPath() +"/"+name; //creates new path by adding new node to parent path
 			}
 		else {
 			path_ = "/";
@@ -49,9 +51,10 @@ Node::Node(std::shared_ptr<Node> parent, std::string const& name, float size, fl
 	worldTransform_{1.0f},
 	position_{position},
 	speed_{speed} {
+		//if the node has a parent
 		if (parent != nullptr) {
-			depth_ = parent_->getDepth() + 1;
-			path_ = parent_->getPath() +"/"+name;
+			depth_ = parent_->getDepth() + 1; //calculates depth for new node
+			path_ = parent_->getPath() +"/"+name; //creates new path by adding new node to parent path
 			}
 		else {
 			path_ = "/";
@@ -70,11 +73,12 @@ void Node::setParent(std::shared_ptr<Node> const& parent){
 	parent_ = parent;
 }
 
+//returns vector of pointers to all children
 std::vector<std::shared_ptr<Node>> Node::getChildrenList() const{
 	return children_;
 }
 
-//What is this for? What should be returned?
+//returns pointer to specific child??
 std::shared_ptr<Node> const& Node::getChild(std::string name){
 	for (auto const& child : getChildrenList()) {
 		if (child->getName() == name){
@@ -117,7 +121,7 @@ void Node::addChild(std::shared_ptr<Node> const& node){
 	children_.push_back(node);
 }
 
-
+//removes child node from children list using it's name to find it
 std::shared_ptr<Node> Node::removeChild(std::string const& name){
 	int i = 0;
 	for (auto const& child : getChildrenList()) {
@@ -130,7 +134,7 @@ std::shared_ptr<Node> Node::removeChild(std::string const& name){
 	return nullptr;
 }
 
-
+// looks for a specific child using it's name
 bool Node::hasChild(std::string const& name){
 	for (auto const& child : getChildrenList()) {
 		if (child->getName() == name){
@@ -161,7 +165,7 @@ float Node::getSpeed() const{
 
 }
 
-
+//prints the attributes of the node except speed and position
 std::ostream& Node::print(std::ostream& os) const{
     os << "name: " << name_ << "\n"
     << "path: " << path_ << "\n"
