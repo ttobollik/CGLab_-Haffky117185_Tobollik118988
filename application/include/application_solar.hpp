@@ -33,7 +33,7 @@ class ApplicationSolar : public Application {
   // (maybe implement iterativle through queue, to reduce time?)
   void drawGraph(SceneGraph scene) const;
 
-  void createRandomStars() const;
+  void createRandomStars();
 
  protected:
   void initializeShaderPrograms();

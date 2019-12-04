@@ -12,7 +12,6 @@ Node::Node() :
 	path_{},
 	localTransform_{},
 	worldTransform_{},
-	position_ {},
 	speed_{} {}
 
 Node::Node(std::shared_ptr<Node> parent, std::string const& name) : 
@@ -23,7 +22,6 @@ Node::Node(std::shared_ptr<Node> parent, std::string const& name) :
 	path_{},
 	localTransform_{1.0f},
 	worldTransform_{1.0f},
-	position_{},
 	speed_{1.0f} {
 		//if the node has a parent
 		if (parent != nullptr) {
@@ -49,7 +47,6 @@ Node::Node(std::shared_ptr<Node> parent, std::string const& name, float size, fl
                      0.0f, 0.0f, 1.0f, 0.0f, 
                      0.0f, 0.0f, 0.0f, size}},
 	worldTransform_{1.0f},
-	position_{position},
 	speed_{speed} {
 		//if the node has a parent
 		if (parent != nullptr) {
@@ -148,15 +145,6 @@ bool Node::hasChild(std::string const& name){
 	return false;
 }
 
-void Node::setPosition(glm::fvec3 const& position){
-	position_ = position;
-}
-
-
-glm::fvec3 Node::getPosition() const{
-	return position_;
-
-}
 
 
 void Node::setSpeed(float speed){

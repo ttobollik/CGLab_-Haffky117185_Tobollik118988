@@ -65,23 +65,26 @@ void ApplicationSolar::createPlanetSystem() const{
   SceneGraph scene = SceneGraph("scene", root_holder);
 
   //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
-  //sun
+  //sun 
   GeometryNode sun{root_holder, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
   auto sun_holder = std::make_shared<GeometryNode>(sun);
   root_holder->addChild(sun_holder);
 
 
+
   //holder node for merkury
-  Node merkury_holder{root_holder, "merkury_holder", };
+  Node merkury_holder{root_holder, "merkury_holder"};
   auto merkury_holder_pointer = std::make_shared<Node>(merkury_holder);
-  merkury_holder_pointer->setLocalTransform(glm::translate({}, glm::fvec3{3.0f, 0.0f, 0.0f}));
+  merkury_holder_pointer->setLocalTransform(glm::rotate(merkury_holder_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
   root_holder->addChild(merkury_holder_pointer);
 
   //merkury
   GeometryNode merkury{root_holder, "merkury"}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
-  merkury_pointer->setLocalTransform(glm::scale({}, glm::fvec3{0.05f}));
+  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{1.0f}));
+  merkury_pointer->setLocalTransform(glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{3.0f, 0.0f, 0.0f})); 
+  merkury_pointer->setLocalTransform(glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
   merkury_holder_pointer->addChild(merkury_pointer);
 
 
@@ -145,11 +148,12 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
     auto& current_node = rendering_queue.front();
     rendering_queue.pop();
 
+    //world transform first rotate then translate, because order makes a difference! 
     glm::fmat4 model_matrix = current_node->getWorldTransform();
 
     //world transform first rotate then translate, because order makes a difference! 
-    model_matrix = glm::rotate(model_matrix,float(glfwGetTime()) * current_node->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
-    model_matrix = glm::translate(model_matrix, current_node->getPosition()); //translation 
+    //model_matrix = glm::rotate(model_matrix,float(glfwGetTime()) * current_node->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
+    //^           model_matrix = glm::translate(model_matrix, current_node->getPosition()); //translation 
 
 
     // extra matrix for normal transformation to keep them orthogonal to surface
@@ -168,7 +172,6 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
     //recursively calls function for children 
     if(current_node->getChildrenList().size()>0) {
-      std::cout<<" i was found " << current_node->getName()<<std::endl;
       for (auto& child : current_node->getChildrenList()){
         rendering_queue.push(child);
       }
@@ -176,7 +179,7 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
   }
 }
 
-void ApplicationSolar::createRandomStars() const{
+void ApplicationSolar::createRandomStars() {
   std::vector<float> positions;
   int num_stars = 500;
 
@@ -189,7 +192,7 @@ void ApplicationSolar::createRandomStars() const{
     positions.push_back(rand_z);
   }
 
-  /*
+
   //following the slides
   //VAO is OpenGL object with necessary states for rendering. encapuslates vertex data
   glGenVertexArrays(1, &star_object.vertex_AO);

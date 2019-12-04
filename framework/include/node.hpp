@@ -36,7 +36,6 @@ public:
 	int getDepth() const; //depth, where the node is on the graph
 	glm::mat4 getLocalTransform() const; //Transformation Matrix in Object Space
 	glm::mat4 getWorldTransform() const; //Transformation Matrix in World Space
-	glm::fvec3 getPosition() const; 
 	float getSpeed() const; 
 
 	void setLocalTransform(glm::mat4 const& transform);
@@ -44,7 +43,6 @@ public:
 	void addChild(std::shared_ptr<Node> const& node);
 	std::shared_ptr<Node> removeChild(std::string const& node);
 	bool hasChild(std::string const& name);
-	void setPosition(glm::fvec3 const& position); //setting position and multiplying in translation before drawing
 	void setSpeed(float speed); //setting speed and multiplying before drawing
 
 	virtual std::ostream& print(std::ostream& os) const; //little helper for Debugging
@@ -57,7 +55,6 @@ protected:
 	std::string path_;
 	glm::mat4 localTransform_;
 	glm::mat4 worldTransform_{glm::mat4(1.0f)};
-	glm::fvec3 position_;
 	float speed_;
 
 };
