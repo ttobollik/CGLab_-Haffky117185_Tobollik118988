@@ -109,7 +109,11 @@ void Node::setLocalTransform(glm::mat4 const& transform){
 }
 
 glm::mat4 Node::getWorldTransform() const{
-	return worldTransform_;
+	if (parent_ != nullptr) {
+		return parent_->getWorldTransform()*localTransform_;
+	} else {
+		return localTransform_;
+	}
 }
 
 void Node::setWorldTransform(glm::mat4 const& transform){

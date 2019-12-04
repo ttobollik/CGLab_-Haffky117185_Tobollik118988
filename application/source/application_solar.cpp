@@ -17,6 +17,7 @@ using namespace gl;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <queue>
 
 #include <iostream>
 
@@ -39,26 +40,7 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::render() const {
-  /***
-  // bind shader to upload uniforms
-  glUseProgram(m_shaders.at("planet").handle);
 
-  glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet
-  model_matrix = glm::translate(model_matrix, glm::fvec3{0.0f, 0.0f, -1.0f}); //translation of planet
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                     1, GL_FALSE, glm::value_ptr(model_matrix));
-
-  // extra matrix for normal transformation to keep them orthogonal to surface
-  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-                     1, GL_FALSE, glm::value_ptr(normal_matrix));
-
-  // bind the VAO to draw
-  glBindVertexArray(planet_object.vertex_AO);
-
-  // draw bound vertex array using bound shader
-  glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL); 
-  ***/
   glUseProgram(m_shaders.at("planet").handle);
 
   //calling the function to create planets
@@ -83,10 +65,20 @@ void ApplicationSolar::createPlanetSystem() const{
   auto sun_holder = std::make_shared<GeometryNode>(sun);
   root_holder->addChild(sun_holder);
 
+
+  //holder node for merkury
+  Node merkury_holder{root_holder, "merkury_holder", };
+  auto merkury_holder_pointer = std::make_shared<Node>(merkury_holder);
+  merkury_holder_pointer->setLocalTransform(glm::translate({}, glm::fvec3{3.0f, 0.0f, 0.0f}));
+  root_holder->addChild(merkury_holder_pointer);
+
   //merkury
-  GeometryNode merkury{root_holder, "merkury", 20.0f, 1.2f, {11.0f, 0.0f, 0.0f}, planet_model}; 
-  auto merkury_holder = std::make_shared<GeometryNode>(merkury);
-  root_holder->addChild(merkury_holder);
+  GeometryNode merkury{root_holder, "merkury"}; 
+  auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
+  merkury_pointer->setGeometry(planet_model);
+  merkury_pointer->setLocalTransform(glm::scale({}, glm::fvec3{0.05f}));
+  merkury_holder_pointer->addChild(merkury_pointer);
+
 
   //venus
   GeometryNode venus{root_holder, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
@@ -133,50 +125,48 @@ void ApplicationSolar::createPlanetSystem() const{
 
   //calling function to draw the objects (transform from object to world space and send to GPU)
   //giving children to be recursive -> maybe changing to iterative and giving the scene itself
-  drawGraph(root_holder->getChildrenList());
+  drawGraph(scene);
 }
 
 //gets vector of pointers to children and draws everything in the scenegraph, which is below the root
-void ApplicationSolar::drawGraph(std::vector<std::shared_ptr<Node>> children) const{
+void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
-  //for all children we want to transform and bring into world space and then ask GPU to draw
-  if (children.size()>0){ //maybe unnecessary, should be removed afterwards
-    for (auto const& child : children) {
-      //creating identity matrix to perform transformation on
-        glm::fmat4 model_matrix = glm::fmat4{1.0};
+  std::queue<std::shared_ptr<Node>> rendering_queue;
+  for (auto& child : scene.getRoot()->getChildrenList()){
+    rendering_queue.push(child);
+  }
 
-        //model transform
-        //if node is not first child of root/sun, but child of different planet (earth --> moon) we have to transform with parents transformation matrix to get into model space
-        if(child->getDepth() >= 2){
-            model_matrix = child->getParent()->getLocalTransform();
-            model_matrix = glm::rotate(model_matrix, float(glfwGetTime())*(child->getParent()->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
-            model_matrix = glm::translate(model_matrix, child->getParent()->getPosition()); //translation around parent
-        }
-        
+  while(!rendering_queue.empty()) {
+    auto& current_node = rendering_queue.front();
+    rendering_queue.pop();
+
+    glm::fmat4 model_matrix = current_node->getWorldTransform();
+
         //world transform first rotate then translate, because order makes a difference! 
-        model_matrix = glm::rotate(model_matrix * child->getLocalTransform(),float(glfwGetTime()) * child->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
-        model_matrix = glm::translate(model_matrix, child->getPosition()); //translation 
+    model_matrix = glm::rotate(model_matrix,float(glfwGetTime()) * current_node->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
+    model_matrix = glm::translate(model_matrix, current_node->getPosition()); //translation 
 
-        // extra matrix for normal transformation to keep them orthogonal to surface
-        glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
-        glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                           1, GL_FALSE, glm::value_ptr(model_matrix));
+    // extra matrix for normal transformation to keep them orthogonal to surface
+    glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
+                       1, GL_FALSE, glm::value_ptr(model_matrix));
 
-        glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-                           1, GL_FALSE, glm::value_ptr(normal_matrix));
+    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
+                       1, GL_FALSE, glm::value_ptr(normal_matrix));
 
-        // bind the VAO to draw
-        glBindVertexArray(planet_object.vertex_AO);
+    // bind the VAO to draw
+    glBindVertexArray(planet_object.vertex_AO);
 
-        // draw bound vertex array using bound shader
-        glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+    // draw bound vertex array using bound shader
+    glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 
-        //recursively calls function for children 
-        if(child->getChildrenList().size()>0) {
-          drawGraph(child->getChildrenList());
-        }
+    //recursively calls function for children 
+    if(current_node->getChildrenList().size()>0) {
+      for (auto& child : current_node->getChildrenList()){
+        rendering_queue.push(child);
       }
     }
+  }
 }
 
 void ApplicationSolar::uploadView() {

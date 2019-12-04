@@ -6,6 +6,7 @@
 #include "structs.hpp"
 #include "geometry_node.hpp"
 #include "node.hpp"
+#include "scene_graph.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -30,7 +31,7 @@ class ApplicationSolar : public Application {
   void createPlanetSystem() const;
   // Function that rekursively traverses the graph and sends objects to GPU -> is called by createPlanetSystem
   // (maybe implement iterativle through queue, to reduce time?)
-  void drawGraph(std::vector<std::shared_ptr<Node>> children) const;
+  void drawGraph(SceneGraph scene) const;
 
  protected:
   void initializeShaderPrograms();
