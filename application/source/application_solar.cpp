@@ -25,11 +25,13 @@ using namespace gl;
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
+ ,star_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})} //camera position
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
   initializeShaderPrograms();
+  createRandomStars();
 }
 
 //destructor
@@ -37,6 +39,9 @@ ApplicationSolar::~ApplicationSolar() {
   glDeleteBuffers(1, &planet_object.vertex_BO);
   glDeleteBuffers(1, &planet_object.element_BO);
   glDeleteVertexArrays(1, &planet_object.vertex_AO);
+
+  glDeleteBuffers(1, &star_object.vertex_BO);
+  glDeleteVertexArrays(1, &star_object.vertex_AO);
 }
 
 void ApplicationSolar::render() const {
@@ -142,9 +147,10 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
     glm::fmat4 model_matrix = current_node->getWorldTransform();
 
-        //world transform first rotate then translate, because order makes a difference! 
+    //world transform first rotate then translate, because order makes a difference! 
     model_matrix = glm::rotate(model_matrix,float(glfwGetTime()) * current_node->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
     model_matrix = glm::translate(model_matrix, current_node->getPosition()); //translation 
+
 
     // extra matrix for normal transformation to keep them orthogonal to surface
     glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
@@ -162,11 +168,53 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
     //recursively calls function for children 
     if(current_node->getChildrenList().size()>0) {
+      std::cout<<" i was found " << current_node->getName()<<std::endl;
       for (auto& child : current_node->getChildrenList()){
         rendering_queue.push(child);
       }
     }
   }
+}
+
+void ApplicationSolar::createRandomStars() const{
+  std::vector<float> positions;
+  int num_stars = 500;
+
+  for (int star_index; star_index < num_stars; ++star_index) {
+    float rand_x = std::rand() % 100;
+    positions.push_back(rand_x);
+    float rand_y = std::rand() % 100;
+    positions.push_back(rand_y);
+    float rand_z = std::rand() % 100;
+    positions.push_back(rand_z);
+  }
+
+  /*
+  //following the slides
+  //VAO is OpenGL object with necessary states for rendering. encapuslates vertex data
+  glGenVertexArrays(1, &star_object.vertex_AO);
+  glBindVertexArray(star_object.vertex_AO);
+
+  //VBO is used as source data for Vertex Array Objects, bound to array buffer
+  //carries vertex information such as position, color, normal...
+  glGenBuffers(1, &star_object.vertex_BO);
+  glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+  //glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(num_stars), ??, GL_STATIC_DRAW);
+
+
+  /*
+  //Index Buffer is optional Buffer Object used for defining a reading order for vertices
+
+
+  //Attributes - index, size(offset), dtype, normalize data?, byte-distance, offsets in bytes
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*3), GLvoid*);
+
+  star_object.draw_mode = GL_POINTS; //important for us!
+  star_object.num_elements = GLsizei(num_stars);
+
+  */
+
 }
 
 void ApplicationSolar::uploadView() {
