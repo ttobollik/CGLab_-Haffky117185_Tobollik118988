@@ -28,12 +28,14 @@ class ApplicationSolar : public Application {
 
 
   // Function that creates multiple planets (by hand)
-  void createPlanetSystem() const;
+  SceneGraph createPlanetSystem() const;
   // Function that rekursively traverses the graph and sends objects to GPU -> is called by createPlanetSystem
   // (maybe implement iterativle through queue, to reduce time?)
   void drawGraph(SceneGraph scene) const;
 
   void createRandomStars();
+  void drawStars() const;
+
 
  protected:
   void initializeShaderPrograms();
@@ -48,11 +50,13 @@ class ApplicationSolar : public Application {
   // cpu representation of model
   model_object planet_object;
   model_object star_object;
+  model_object orbit_object;
   
   // camera transform matrix
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
+
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "node.hpp"
+#include "geometry_node.hpp"
 #include <memory>
 
 
@@ -23,6 +24,7 @@ public:
 	std::shared_ptr<Node> const& getRoot();
 
 	void printGraph();
+	std::vector<std::shared_ptr<GeometryNode>> geometry_nodes_;
 
 private:
 	//setter are private because of Singleton
@@ -34,6 +36,7 @@ private:
 	//static SceneGraph* scene_graph_instance_;
 	std::shared_ptr<Node> root_;
 	std::string name_;
+	
 };
 
 #endif

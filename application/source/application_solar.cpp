@@ -21,6 +21,7 @@ using namespace gl;
 
 #include <iostream>
 
+
 //constructor
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -29,9 +30,9 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})} //camera position
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
+  createRandomStars();
   initializeGeometry();
   initializeShaderPrograms();
-  createRandomStars();
 }
 
 //destructor
@@ -45,58 +46,78 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::render() const {
+  SceneGraph scene = createPlanetSystem();
 
-  glUseProgram(m_shaders.at("planet").handle);
 
   //calling the function to create planets
-  createPlanetSystem();
+  glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+  drawStars();
+
+  glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
+  drawGraph(scene);
 
 }
 
+void ApplicationSolar::drawStars() const{
 
-void ApplicationSolar::createPlanetSystem() const{
+  glUseProgram(m_shaders.at("star").handle);
+
+  glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ModelViewMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_transform));
+  
+  glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ProjectionMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+
+  glBindVertexArray(star_object.vertex_AO);
+  
+
+  glDrawArrays(star_object.draw_mode, GLint(0), star_object.num_elements);
+}
+
+
+SceneGraph ApplicationSolar::createPlanetSystem() const{
 
   // we load a circular model from the resources
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
   // creating an empty root node with nullptr as parent, named /, path / and 0 depth
   Node root{nullptr, "/"};
-  auto root_holder = std::make_shared<Node>(root);
-  SceneGraph scene = SceneGraph("scene", root_holder);
+  auto root_pointer = std::make_shared<Node>(root);
+  SceneGraph scene = SceneGraph("scene", root_pointer);
 
   //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
   //sun 
-  GeometryNode sun{root_holder, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
-  auto sun_holder = std::make_shared<GeometryNode>(sun);
-  root_holder->addChild(sun_holder);
-
+  GeometryNode sun{root_pointer, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
+  auto sun_pointer = std::make_shared<GeometryNode>(sun);
+  root_pointer->addChild(sun_pointer);
+  scene.geometry_nodes_.push_back(sun_pointer);
 
 
   //holder node for merkury
-  Node merkury_holder{root_holder, "merkury_holder"};
+  Node merkury_holder{root_pointer, "merkury_holder"};
   auto merkury_holder_pointer = std::make_shared<Node>(merkury_holder);
   merkury_holder_pointer->setLocalTransform(glm::rotate(merkury_holder_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
-  root_holder->addChild(merkury_holder_pointer);
+  root_pointer->addChild(merkury_holder_pointer);
 
   //merkury
-  GeometryNode merkury{root_holder, "merkury"}; 
+  GeometryNode merkury{merkury_holder_pointer, "merkury"}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
-  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{1.0f}));
-  merkury_pointer->setLocalTransform(glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{3.0f, 0.0f, 0.0f})); 
-  merkury_pointer->setLocalTransform(glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{1.0f})*
+                                    (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{3.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   merkury_holder_pointer->addChild(merkury_pointer);
-
+  scene.geometry_nodes_.push_back(merkury_pointer);
 
   //venus
-  GeometryNode venus{root_holder, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
   auto venus_holder = std::make_shared<GeometryNode>(venus);
-  root_holder->addChild(venus_holder);
+  root_pointer->addChild(venus_holder);
 
   //earth
-  GeometryNode earth{root_holder, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode earth{root_pointer, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
   auto earth_holder = std::make_shared<GeometryNode>(earth);
-  root_holder->addChild(earth_holder);
+  root_pointer->addChild(earth_holder);
 
   //moon
   GeometryNode moon{earth_holder, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
@@ -104,92 +125,82 @@ void ApplicationSolar::createPlanetSystem() const{
   earth_holder->addChild(moon_holder); //adds moon to child of earth not root
 
   //mars
-  GeometryNode mars{root_holder, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode mars{root_pointer, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
   auto mars_holder = std::make_shared<GeometryNode>(mars);
-  root_holder->addChild(mars_holder);
+  root_pointer->addChild(mars_holder);
 
   //jupiter
-  GeometryNode jupiter{root_holder, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode jupiter{root_pointer, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
   auto jupiter_holder = std::make_shared<GeometryNode>(jupiter);
-  root_holder->addChild(jupiter_holder);
+  root_pointer->addChild(jupiter_holder);
 
   //saturn
-  GeometryNode saturn{root_holder, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode saturn{root_pointer, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
   auto saturn_holder = std::make_shared<GeometryNode>(saturn);
-  root_holder->addChild(saturn_holder);
+  root_pointer->addChild(saturn_holder);
 
   //uranus
-  GeometryNode uranus{root_holder, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode uranus{root_pointer, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
   auto uranus_holder = std::make_shared<GeometryNode>(uranus);
-  root_holder->addChild(uranus_holder);
+  root_pointer->addChild(uranus_holder);
 
   //neptune
-  GeometryNode neptune{root_holder, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
+  GeometryNode neptune{root_pointer, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
   auto neptune_holder = std::make_shared<GeometryNode>(neptune);
-  root_holder->addChild(neptune_holder);
+  root_pointer->addChild(neptune_holder);
 
   //calling to print the sceneGraph. Currently keeps printing. Ideally print once,
   scene.printGraph();
 
   //calling function to draw the objects (transform from object to world space and send to GPU)
   //giving children to be recursive -> maybe changing to iterative and giving the scene itself
-  drawGraph(scene);
+  return scene;
 }
 
 //gets vector of pointers to children and draws everything in the scenegraph, which is below the root
 void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
-  std::queue<std::shared_ptr<Node>> rendering_queue;
-  for (auto& child : scene.getRoot()->getChildrenList()){
-    rendering_queue.push(child);
-  }
+   for (auto current_node : scene.geometry_nodes_) {
+        //world transform first rotate then translate, because order makes a difference! 
+        glm::fmat4 model_matrix = current_node->getWorldTransform();
 
-  while(!rendering_queue.empty()) {
-    auto& current_node = rendering_queue.front();
-    rendering_queue.pop();
+        glUseProgram(m_shaders.at("planet").handle);
+        // extra matrix for normal transformation to keep them orthogonal to surface
+        glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+        glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
+                           1, GL_FALSE, glm::value_ptr(model_matrix));
 
-    //world transform first rotate then translate, because order makes a difference! 
-    glm::fmat4 model_matrix = current_node->getWorldTransform();
+        glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
+                           1, GL_FALSE, glm::value_ptr(normal_matrix));
 
-    //world transform first rotate then translate, because order makes a difference! 
-    //model_matrix = glm::rotate(model_matrix,float(glfwGetTime()) * current_node->getSpeed(), glm::fvec3{0.0f, 1.0f, 0.0f}); //rotation of planet 
-    //^           model_matrix = glm::translate(model_matrix, current_node->getPosition()); //translation 
+        // bind the VAO to draw
+        glBindVertexArray(planet_object.vertex_AO);
 
-
-    // extra matrix for normal transformation to keep them orthogonal to surface
-    glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
-    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                       1, GL_FALSE, glm::value_ptr(model_matrix));
-
-    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-                       1, GL_FALSE, glm::value_ptr(normal_matrix));
-
-    // bind the VAO to draw
-    glBindVertexArray(planet_object.vertex_AO);
-
-    // draw bound vertex array using bound shader
-    glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
-
-    //recursively calls function for children 
-    if(current_node->getChildrenList().size()>0) {
-      for (auto& child : current_node->getChildrenList()){
-        rendering_queue.push(child);
+        // draw bound vertex array using bound shader
+        glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+        
       }
-    }
-  }
+
+
 }
 
-void ApplicationSolar::createRandomStars() {
-  std::vector<float> positions;
-  int num_stars = 500;
 
-  for (int star_index; star_index < num_stars; ++star_index) {
-    float rand_x = std::rand() % 100;
-    positions.push_back(rand_x);
-    float rand_y = std::rand() % 100;
-    positions.push_back(rand_y);
-    float rand_z = std::rand() % 100;
-    positions.push_back(rand_z);
+
+void ApplicationSolar::createRandomStars() {
+  std::vector<float> positions_and_colors;
+  int num_stars = 6000;
+
+  for (int star_index = 0; star_index < num_stars; ++star_index) {
+    float rand_x = std::rand() % 100 - 50;
+    positions_and_colors.push_back(rand_x);
+    float rand_y = std::rand() % 100 - 50;
+    positions_and_colors.push_back(rand_y);
+    float rand_z = std::rand() % 100 - 50;
+    positions_and_colors.push_back(-rand_z);
+
+    positions_and_colors.push_back((rand_x+50)/99.0f);
+    positions_and_colors.push_back((rand_y+50)/99.0f);
+    positions_and_colors.push_back((rand_z+50)/99.0f);
   }
 
 
@@ -202,42 +213,53 @@ void ApplicationSolar::createRandomStars() {
   //carries vertex information such as position, color, normal...
   glGenBuffers(1, &star_object.vertex_BO);
   glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
-  //glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(num_stars), ??, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_stars*6, positions_and_colors.data(), GL_STATIC_DRAW);
 
-
-  /*
-  //Index Buffer is optional Buffer Object used for defining a reading order for vertices
-
-
-  //Attributes - index, size(offset), dtype, normalize data?, byte-distance, offsets in bytes
+  //Attributes - index, size(3-dimensional), dtype, normalize data?, byte-distance, offsets in bytes
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*3), GLvoid*);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*6), 0);
 
-  star_object.draw_mode = GL_POINTS; //important for us!
+   //Attributes - index, size(3-dimensional), dtype, normalize data?, byte-distance, offsets in bytes
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*6), (void*) (sizeof(float)*3));
+
+
+  star_object.draw_mode = GL_POINTS; 
   star_object.num_elements = GLsizei(num_stars);
 
-  */
-
 }
+
+
 
 void ApplicationSolar::uploadView() {
   // vertices are transformed in camera space, so camera transform must be inverted
   glm::fmat4 view_matrix = glm::inverse(m_view_transform);
   // upload matrix to gpu
+  glUseProgram(m_shaders.at("planet").handle);
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(view_matrix));
+
+  glUseProgram(m_shaders.at("star").handle);
+  glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ModelViewMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_transform));
+
 }
 
 void ApplicationSolar::uploadProjection() {
   // upload matrix to gpu
+  glUseProgram(m_shaders.at("planet").handle);
   glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ProjectionMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+
+  glUseProgram(m_shaders.at("star").handle);
+  glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
 
 // update uniform locations
 void ApplicationSolar::uploadUniforms() { 
   // bind shader to which to upload unforms
-  glUseProgram(m_shaders.at("planet").handle);
+  //glUseProgram(m_shaders.at("planet").handle);
   // upload uniform values to new locations
   uploadView();
   uploadProjection();
@@ -254,6 +276,14 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("planet").u_locs["ModelMatrix"] = -1;
   m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
   m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
+
+  // create a new handle for the stars to use a different shader at vao.frag
+  m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
+  // request uniform locations for shader program 
+  m_shaders.at("star").u_locs["ModelViewMatrix"] = -1;
+  m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
+
 }
 
 // load models
