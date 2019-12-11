@@ -86,7 +86,6 @@ void ApplicationSolar::drawStars() const{
 
 SceneGraph ApplicationSolar::createPlanetSystem() const{
 
-
   // we load a circular model from the resources
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
@@ -95,18 +94,14 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   auto root_pointer = std::make_shared<Node>(root);
   SceneGraph scene = SceneGraph("scene", root_pointer);
 
-  CameraNode camera{root_pointer, "main_camera", true, true, m_view_projection};
-  auto camera_pointer = std::make_shared<CameraNode>(camera);
-  //root_pointer->addChild(camera_pointer);
-
-
-  //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
-  //sun 
-  GeometryNode sun{root_pointer, "sun", 3.0f, 1.0f, {0.0f, 0.0f, 0.0f}, planet_model};
+  //sun
+  GeometryNode sun{root_pointer, "sun"}; 
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
+  sun_pointer->setGeometry(planet_model);
+  sun_pointer->setLocalTransform(glm::scale(sun_pointer->getLocalTransform(), glm::fvec3{2.0f})*
+                                    (glm::translate(sun_pointer->getLocalTransform(), glm::fvec3{0.0f, 0.0f, 0.0f})));
   root_pointer->addChild(sun_pointer);
   scene.geometry_nodes_.push_back(sun_pointer);
-
 
   //holder node for merkury
   Node merkury_holder{root_pointer, "merkury_holder"};
@@ -118,53 +113,139 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode merkury{merkury_holder_pointer, "merkury"}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
-  float distance_to_center = 3.0f;
-  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{0.7f})*
-                                    (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{3.0f, 0.0f, 0.0f}))*
+  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{0.4f})*
+                                    (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{7.0f, 0.0f, 0.0f}))*
                                     (glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   merkury_holder_pointer->addChild(merkury_pointer);
   scene.geometry_nodes_.push_back(merkury_pointer);
 
+  //holder node for venus
+  Node venus_holder{root_pointer, "venus_holder"};
+  auto venus_holder_pointer = std::make_shared<Node>(venus_holder);
+  venus_holder_pointer->setLocalTransform(glm::rotate(venus_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(venus_holder_pointer);
 
   //venus
-  GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
-  auto venus_holder = std::make_shared<GeometryNode>(venus);
-  root_pointer->addChild(venus_holder);
+  GeometryNode venus{venus_holder_pointer, "venus"}; 
+  auto venus_pointer = std::make_shared<GeometryNode>(venus);
+  venus_pointer->setGeometry(planet_model);
+  venus_pointer->setLocalTransform(glm::scale(venus_pointer->getLocalTransform(), glm::fvec3{0.6})*
+                                    (glm::translate(venus_pointer->getLocalTransform(), glm::fvec3{12.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(venus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  venus_holder_pointer->addChild(venus_pointer);
+  scene.geometry_nodes_.push_back(venus_pointer);
+
+  //holder node for earth
+  Node earth_holder{root_pointer, "earth_holder"};
+  auto earth_holder_pointer = std::make_shared<Node>(earth_holder);
+  earth_holder_pointer->setLocalTransform(glm::rotate(earth_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.4f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(earth_holder_pointer);
 
   //earth
-  GeometryNode earth{root_pointer, "earth", 15.0f, 1.2f, {14.0f, 0.0f, 0.0f}, planet_model}; 
-  auto earth_holder = std::make_shared<GeometryNode>(earth);
-  root_pointer->addChild(earth_holder);
+  GeometryNode earth{earth_holder_pointer, "earth"}; 
+  auto earth_pointer = std::make_shared<GeometryNode>(earth);
+  earth_pointer->setGeometry(planet_model);
+  earth_pointer->setLocalTransform(glm::scale(earth_pointer->getLocalTransform(), glm::fvec3{0.3})*
+                                    (glm::translate(earth_pointer->getLocalTransform(), glm::fvec3{14.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(earth_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  earth_holder_pointer->addChild(earth_pointer);
+  scene.geometry_nodes_.push_back(earth_pointer);
+
+  //holder node for moon
+  Node moon_holder{earth_pointer, "moon_holder"};
+  auto moon_holder_pointer = std::make_shared<Node>(moon_holder);
+  moon_holder_pointer->setLocalTransform(glm::rotate(moon_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.4f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  earth_pointer->addChild(moon_holder_pointer);
 
   //moon
-  GeometryNode moon{earth_holder, "moon", 2.0f, 1.8f, {4.0f, 0.0f, 0.0f}, planet_model}; 
-  auto moon_holder = std::make_shared<GeometryNode>(moon);
-  earth_holder->addChild(moon_holder); //adds moon to child of earth not root
+  GeometryNode moon{moon_holder_pointer, "moon"}; 
+  auto moon_pointer = std::make_shared<GeometryNode>(moon);
+  moon_pointer->setGeometry(planet_model);
+  moon_pointer->setLocalTransform(glm::scale(moon_pointer->getLocalTransform(), glm::fvec3{0.3})*
+                                    (glm::translate(moon_pointer->getLocalTransform(), glm::fvec3{5.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(moon_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  moon_holder_pointer->addChild(moon_pointer);
+  scene.geometry_nodes_.push_back(moon_pointer);
+
+  //holder node for mars
+  Node mars_holder{root_pointer, "mars_holder"};
+  auto mars_holder_pointer = std::make_shared<Node>(mars_holder);
+  mars_holder_pointer->setLocalTransform(glm::rotate(mars_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(mars_holder_pointer);
 
   //mars
-  GeometryNode mars{root_pointer, "mars", 15.0f, 0.1f, {15.0f, 0.0f, 0.0f}, planet_model}; 
-  auto mars_holder = std::make_shared<GeometryNode>(mars);
-  root_pointer->addChild(mars_holder);
+  GeometryNode mars{mars_holder_pointer, "mars"}; 
+  auto mars_pointer = std::make_shared<GeometryNode>(mars);
+  mars_pointer->setGeometry(planet_model);
+  mars_pointer->setLocalTransform(glm::scale(mars_pointer->getLocalTransform(), glm::fvec3{0.1f})*
+                                    (glm::translate(mars_pointer->getLocalTransform(), glm::fvec3{30.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(mars_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  mars_holder_pointer->addChild(mars_pointer);
+  scene.geometry_nodes_.push_back(mars_pointer);
+
+  //holder node for jupiter
+  Node jupiter_holder{root_pointer, "jupiter_holder"};
+  auto jupiter_holder_pointer = std::make_shared<Node>(jupiter_holder);
+  jupiter_holder_pointer->setLocalTransform(glm::rotate(jupiter_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.5f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(jupiter_holder_pointer);
 
   //jupiter
-  GeometryNode jupiter{root_pointer, "jupiter", 7.0f, 0.3f, {11.0f, 0.0f, 0.0f}, planet_model}; 
-  auto jupiter_holder = std::make_shared<GeometryNode>(jupiter);
-  root_pointer->addChild(jupiter_holder);
+  GeometryNode jupiter{jupiter_holder_pointer, "jupiter"}; 
+  auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
+  jupiter_pointer->setGeometry(planet_model);
+  jupiter_pointer->setLocalTransform(glm::scale(jupiter_pointer->getLocalTransform(), glm::fvec3{0.9})*
+                                    (glm::translate(jupiter_pointer->getLocalTransform(), glm::fvec3{10.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(jupiter_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  jupiter_holder_pointer->addChild(jupiter_pointer);
+  scene.geometry_nodes_.push_back(jupiter_pointer);
+
+  //holder node for saturn
+  Node saturn_holder{root_pointer, "saturn_holder"};
+  auto saturn_holder_pointer = std::make_shared<Node>(saturn_holder);
+  saturn_holder_pointer->setLocalTransform(glm::rotate(saturn_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.3f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(saturn_holder_pointer);
 
   //saturn
-  GeometryNode saturn{root_pointer, "saturn", 10.0f, 0.8f, {16.0f, 0.0f, 0.0f}, planet_model}; 
-  auto saturn_holder = std::make_shared<GeometryNode>(saturn);
-  root_pointer->addChild(saturn_holder);
+  GeometryNode saturn{saturn_holder_pointer, "saturn"}; 
+  auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
+  saturn_pointer->setGeometry(planet_model);
+  saturn_pointer->setLocalTransform(glm::scale(saturn_pointer->getLocalTransform(), glm::fvec3{1.0f})*
+                                    (glm::translate(saturn_pointer->getLocalTransform(), glm::fvec3{12.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(saturn_pointer->getLocalTransform(), float(glfwGetTime())* 0.7f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  saturn_holder_pointer->addChild(saturn_pointer);
+  scene.geometry_nodes_.push_back(saturn_pointer);
+
+  //holder node for uranus
+  Node uranus_holder{root_pointer, "uranus_holder"};
+  auto uranus_holder_pointer = std::make_shared<Node>(uranus_holder);
+  uranus_holder_pointer->setLocalTransform(glm::rotate(uranus_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.7f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(uranus_holder_pointer);
 
   //uranus
-  GeometryNode uranus{root_pointer, "uranus", 12.0f, 0.4f, {28.0f, 0.0f, 0.0f}, planet_model}; 
-  auto uranus_holder = std::make_shared<GeometryNode>(uranus);
-  root_pointer->addChild(uranus_holder);
+  GeometryNode uranus{uranus_holder_pointer, "uranus"}; 
+  auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
+  uranus_pointer->setGeometry(planet_model);
+  uranus_pointer->setLocalTransform(glm::scale(uranus_pointer->getLocalTransform(), glm::fvec3{0.2})*
+                                    (glm::translate(uranus_pointer->getLocalTransform(), glm::fvec3{50.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(uranus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  uranus_holder_pointer->addChild(uranus_pointer);
+  scene.geometry_nodes_.push_back(uranus_pointer);
+
+  //holder node for neptune
+  Node neptune_holder{root_pointer, "neptune_holder"};
+  auto neptune_holder_pointer = std::make_shared<Node>(neptune_holder);
+  neptune_holder_pointer->setLocalTransform(glm::rotate(neptune_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.4f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  root_pointer->addChild(neptune_holder_pointer);
 
   //neptune
-  GeometryNode neptune{root_pointer, "neptune", 13.0f, 0.1f, {34.0f, 0.0f, 0.0f}, planet_model}; 
-  auto neptune_holder = std::make_shared<GeometryNode>(neptune);
-  root_pointer->addChild(neptune_holder);
+  GeometryNode neptune{neptune_holder_pointer, "neptune"}; 
+  auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
+  neptune_pointer->setGeometry(planet_model);
+  neptune_pointer->setLocalTransform(glm::scale(neptune_pointer->getLocalTransform(), glm::fvec3{0.5})*
+                                    (glm::translate(neptune_pointer->getLocalTransform(), glm::fvec3{15.0f, 0.0f, 0.0f}))*
+                                    (glm::rotate(neptune_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+  neptune_holder_pointer->addChild(neptune_pointer);
+  scene.geometry_nodes_.push_back(neptune_pointer);
 
   //calling to print the sceneGraph. Currently keeps printing. Ideally print once,
   scene.printGraph();
