@@ -78,7 +78,6 @@ void ApplicationSolar::drawStars() const{
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
 
   glBindVertexArray(star_object.vertex_AO);
-  
 
   glDrawArrays(star_object.draw_mode, GLint(0), star_object.num_elements);
 }
@@ -113,8 +112,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode merkury{merkury_holder_pointer, "merkury"}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
+  float merkury_distance = 7.0f;
+  merkury_pointer->setDistanceToCenter(merkury_distance);
   merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{0.4f})*
-                                    (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{7.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{merkury_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   merkury_holder_pointer->addChild(merkury_pointer);
   scene.geometry_nodes_.push_back(merkury_pointer);
@@ -129,8 +130,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode venus{venus_holder_pointer, "venus"}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   venus_pointer->setGeometry(planet_model);
+  float venus_distance = 12.0f;
+  venus_pointer->setDistanceToCenter(venus_distance);
   venus_pointer->setLocalTransform(glm::scale(venus_pointer->getLocalTransform(), glm::fvec3{0.6})*
-                                    (glm::translate(venus_pointer->getLocalTransform(), glm::fvec3{12.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(venus_pointer->getLocalTransform(), glm::fvec3{venus_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(venus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   venus_holder_pointer->addChild(venus_pointer);
   scene.geometry_nodes_.push_back(venus_pointer);
@@ -145,8 +148,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode earth{earth_holder_pointer, "earth"}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   earth_pointer->setGeometry(planet_model);
+  float earth_distance = 14.0f;
+  earth_pointer->setDistanceToCenter(earth_distance);
   earth_pointer->setLocalTransform(glm::scale(earth_pointer->getLocalTransform(), glm::fvec3{0.3})*
-                                    (glm::translate(earth_pointer->getLocalTransform(), glm::fvec3{14.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(earth_pointer->getLocalTransform(), glm::fvec3{earth_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(earth_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   earth_holder_pointer->addChild(earth_pointer);
   scene.geometry_nodes_.push_back(earth_pointer);
@@ -177,8 +182,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode mars{mars_holder_pointer, "mars"}; 
   auto mars_pointer = std::make_shared<GeometryNode>(mars);
   mars_pointer->setGeometry(planet_model);
+  float mars_distance = 30.0f;
+  mars_pointer->setDistanceToCenter(mars_distance);
   mars_pointer->setLocalTransform(glm::scale(mars_pointer->getLocalTransform(), glm::fvec3{0.1f})*
-                                    (glm::translate(mars_pointer->getLocalTransform(), glm::fvec3{30.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(mars_pointer->getLocalTransform(), glm::fvec3{mars_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(mars_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   mars_holder_pointer->addChild(mars_pointer);
   scene.geometry_nodes_.push_back(mars_pointer);
@@ -193,8 +200,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode jupiter{jupiter_holder_pointer, "jupiter"}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   jupiter_pointer->setGeometry(planet_model);
+  float jupiter_distance = 10.0f;
+  jupiter_pointer->setDistanceToCenter(jupiter_distance);
   jupiter_pointer->setLocalTransform(glm::scale(jupiter_pointer->getLocalTransform(), glm::fvec3{0.9})*
-                                    (glm::translate(jupiter_pointer->getLocalTransform(), glm::fvec3{10.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(jupiter_pointer->getLocalTransform(), glm::fvec3{jupiter_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(jupiter_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   jupiter_holder_pointer->addChild(jupiter_pointer);
   scene.geometry_nodes_.push_back(jupiter_pointer);
@@ -209,8 +218,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode saturn{saturn_holder_pointer, "saturn"}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   saturn_pointer->setGeometry(planet_model);
+  float saturn_distance = 12.0f;
+  saturn_pointer->setDistanceToCenter(saturn_distance);
   saturn_pointer->setLocalTransform(glm::scale(saturn_pointer->getLocalTransform(), glm::fvec3{1.0f})*
-                                    (glm::translate(saturn_pointer->getLocalTransform(), glm::fvec3{12.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(saturn_pointer->getLocalTransform(), glm::fvec3{saturn_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(saturn_pointer->getLocalTransform(), float(glfwGetTime())* 0.7f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   saturn_holder_pointer->addChild(saturn_pointer);
   scene.geometry_nodes_.push_back(saturn_pointer);
@@ -225,8 +236,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode uranus{uranus_holder_pointer, "uranus"}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   uranus_pointer->setGeometry(planet_model);
+  float uranus_distance = 50.0f;
+  uranus_pointer->setDistanceToCenter(uranus_distance);
   uranus_pointer->setLocalTransform(glm::scale(uranus_pointer->getLocalTransform(), glm::fvec3{0.2})*
-                                    (glm::translate(uranus_pointer->getLocalTransform(), glm::fvec3{50.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(uranus_pointer->getLocalTransform(), glm::fvec3{uranus_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(uranus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   uranus_holder_pointer->addChild(uranus_pointer);
   scene.geometry_nodes_.push_back(uranus_pointer);
@@ -241,8 +254,10 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode neptune{neptune_holder_pointer, "neptune"}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   neptune_pointer->setGeometry(planet_model);
+  float neptune_distance = 15.0f;
+  neptune_pointer->setDistanceToCenter(neptune_distance);
   neptune_pointer->setLocalTransform(glm::scale(neptune_pointer->getLocalTransform(), glm::fvec3{0.5})*
-                                    (glm::translate(neptune_pointer->getLocalTransform(), glm::fvec3{15.0f, 0.0f, 0.0f}))*
+                                    (glm::translate(neptune_pointer->getLocalTransform(), glm::fvec3{neptune_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(neptune_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   neptune_holder_pointer->addChild(neptune_pointer);
   scene.geometry_nodes_.push_back(neptune_pointer);
@@ -276,24 +291,25 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
-        
       }
 
 }
 
 void ApplicationSolar::createOrbits() {
   std::vector<float> orbits;
-  uint points_in_circle = 3600;
+  uint points_in_circle = 360;
 
   for (int i = 0; i < points_in_circle; ++i) {
-    GLfloat x = cos(2*M_PI/points_in_circle*i);
+    GLfloat x = cos(i*M_PI/180); //calculating points on a circle in right order
     GLfloat y = 0;
-    GLfloat z = sin(2*M_PI/points_in_circle*i);
+    GLfloat z = sin(i*M_PI/180);
     orbits.push_back(x);
     orbits.push_back(y);
     orbits.push_back(z);
   }
 
+
+  //Same as in draw stars
   glGenVertexArrays(1, &orbit_object.vertex_AO);
   glBindVertexArray(orbit_object.vertex_AO);
 
@@ -311,10 +327,10 @@ void ApplicationSolar::createOrbits() {
 
 void ApplicationSolar::drawOrbits(SceneGraph const& scene) const{
 
-
+  //go through planets and get distance and set as radius -> scale of circle. not yet correct
   for (auto const& planet : scene.geometry_nodes_) {
       glm::fmat4 orbit_matrix = glm::fmat4{1.0f};
-      float radius = 1.0f;
+      float radius = planet->getDistanceToCenter();
       orbit_matrix = glm::scale(orbit_matrix, glm::fvec3{radius, radius, radius});
 
 
@@ -332,7 +348,10 @@ void ApplicationSolar::drawOrbits(SceneGraph const& scene) const{
 }
 
 void ApplicationSolar::createRandomStars() {
+  //Speichern einen Vektor mit Positionen und Farben fuer alle Sterne
   std::vector<float> positions_and_colors;
+
+  //Anzahl der Sterne
   int num_stars = 6000;
 
   for (int star_index = 0; star_index < num_stars; ++star_index) {
@@ -343,9 +362,13 @@ void ApplicationSolar::createRandomStars() {
     float rand_z = std::rand() % 100 - 50;
     positions_and_colors.push_back(-rand_z);
 
-    positions_and_colors.push_back((rand_x+50)/99.0f);
-    positions_and_colors.push_back((rand_y+50)/99.0f);
-    positions_and_colors.push_back((rand_z+50)/99.0f);
+    float rand_x_color = std::rand() % 100;
+    float rand_y_color = std::rand() % 10;
+    float rand_z_color = std::rand() % 100;
+
+    positions_and_colors.push_back((rand_x_color)/99.0f);
+    positions_and_colors.push_back((rand_y_color)/99.0f);
+    positions_and_colors.push_back((rand_z_color)/99.0f);
   }
 
 
@@ -358,6 +381,7 @@ void ApplicationSolar::createRandomStars() {
   //carries vertex information such as position, color, normal...
   glGenBuffers(1, &star_object.vertex_BO);
   glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+  // buffer, size of buffer, where is data, 
   glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_stars*6, positions_and_colors.data(), GL_STATIC_DRAW);
 
   //Attributes - index, size(3-dimensional), dtype, normalize data?, byte-distance, offsets in bytes

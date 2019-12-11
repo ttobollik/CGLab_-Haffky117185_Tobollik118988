@@ -107,6 +107,14 @@ void Node::setLocalTransform(glm::mat4 const& transform){
 	localTransform_ = transform;
 }
 
+void Node::setDistanceToCenter(float distance){
+	distance_to_center_ = distance;
+}
+
+float Node::getDistanceToCenter() const{
+	return distance_to_center_;
+}
+
 glm::mat4 Node::getWorldTransform() const{
 	if (parent_ != nullptr) {
 		return parent_->getWorldTransform()*localTransform_;

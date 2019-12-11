@@ -37,6 +37,7 @@ public:
 	glm::mat4 getLocalTransform() const; //Transformation Matrix in Object Space
 	glm::mat4 getWorldTransform() const; //Transformation Matrix in World Space
 	float getSpeed() const; 
+	float getDistanceToCenter() const;
 
 	void setLocalTransform(glm::mat4 const& transform);
 	void setWorldTransform(glm::mat4 const& transform);
@@ -44,6 +45,7 @@ public:
 	std::shared_ptr<Node> removeChild(std::string const& node);
 	bool hasChild(std::string const& name);
 	void setSpeed(float speed); //setting speed and multiplying before drawing
+	void setDistanceToCenter(float distance);
 
 	virtual std::ostream& print(std::ostream& os) const; //little helper for Debugging
 	
