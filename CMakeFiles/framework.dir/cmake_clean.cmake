@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/framework.dir/framework/source/application.cpp.o"
+  "CMakeFiles/framework.dir/framework/source/camera_node.cpp.o"
   "CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o"
   "CMakeFiles/framework.dir/framework/source/model.cpp.o"
   "CMakeFiles/framework.dir/framework/source/model_loader.cpp.o"

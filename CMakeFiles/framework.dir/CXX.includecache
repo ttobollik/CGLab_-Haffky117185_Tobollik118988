@@ -52,6 +52,10 @@ glbinding/gl/gl.h
 GLFW/glfw3.h
 -
 
+/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/camera_node.cpp
+camera_node.hpp
+-
+
 /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/geometry_node.cpp
 geometry_node.hpp
 -
@@ -1221,6 +1225,12 @@ utils.hpp
 framework/include/utils.hpp
 window_handler.hpp
 framework/include/window_handler.hpp
+
+framework/include/camera_node.hpp
+glm/glm.hpp
+-
+node.hpp
+-
 
 framework/include/geometry_node.hpp
 node.hpp

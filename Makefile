@@ -289,6 +289,33 @@ framework/source/application.cpp.s:
 	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/application.cpp.s
 .PHONY : framework/source/application.cpp.s
 
+framework/source/camera_node.o: framework/source/camera_node.cpp.o
+
+.PHONY : framework/source/camera_node.o
+
+# target to build an object file
+framework/source/camera_node.cpp.o:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/camera_node.cpp.o
+.PHONY : framework/source/camera_node.cpp.o
+
+framework/source/camera_node.i: framework/source/camera_node.cpp.i
+
+.PHONY : framework/source/camera_node.i
+
+# target to preprocess a source file
+framework/source/camera_node.cpp.i:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/camera_node.cpp.i
+.PHONY : framework/source/camera_node.cpp.i
+
+framework/source/camera_node.s: framework/source/camera_node.cpp.s
+
+.PHONY : framework/source/camera_node.s
+
+# target to generate assembly for a file
+framework/source/camera_node.cpp.s:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/camera_node.cpp.s
+.PHONY : framework/source/camera_node.cpp.s
+
 framework/source/geometry_node.o: framework/source/geometry_node.cpp.o
 
 .PHONY : framework/source/geometry_node.o
@@ -557,6 +584,9 @@ help:
 	@echo "... framework/source/application.o"
 	@echo "... framework/source/application.i"
 	@echo "... framework/source/application.s"
+	@echo "... framework/source/camera_node.o"
+	@echo "... framework/source/camera_node.i"
+	@echo "... framework/source/camera_node.s"
 	@echo "... framework/source/geometry_node.o"
 	@echo "... framework/source/geometry_node.i"
 	@echo "... framework/source/geometry_node.s"
