@@ -5,6 +5,7 @@
 #include "model.hpp"
 #include "structs.hpp"
 #include "geometry_node.hpp"
+#include "camera_node.hpp"
 #include "node.hpp"
 #include "scene_graph.hpp"
 
@@ -29,12 +30,13 @@ class ApplicationSolar : public Application {
 
   // Function that creates multiple planets (by hand)
   SceneGraph createPlanetSystem() const;
-  // Function that rekursively traverses the graph and sends objects to GPU -> is called by createPlanetSystem
-  // (maybe implement iterativle through queue, to reduce time?)
-  void drawGraph(SceneGraph scene) const;
-
+  // Function that creates a set number of stars. Parameters are set inside function
   void createRandomStars();
+  void createOrbits();
+
+  void drawGraph(SceneGraph scene) const;
   void drawStars() const;
+  void drawOrbits(SceneGraph const& scene)const;
 
 
  protected:
@@ -51,6 +53,8 @@ class ApplicationSolar : public Application {
   model_object planet_object;
   model_object star_object;
   model_object orbit_object;
+
+
   
   // camera transform matrix
   glm::fmat4 m_view_transform;

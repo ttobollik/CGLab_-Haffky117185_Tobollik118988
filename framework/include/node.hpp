@@ -56,6 +56,7 @@ protected:
 	glm::mat4 localTransform_;
 	glm::mat4 worldTransform_{glm::mat4(1.0f)};
 	float speed_;
+	float distance_to_center_;
 
 };
 

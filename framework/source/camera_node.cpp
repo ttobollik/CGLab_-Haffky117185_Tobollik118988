@@ -6,6 +6,13 @@ CameraNode::CameraNode():
 	isEnabled_{},
 	projectionMatrix_{} {}
 
+CameraNode::CameraNode(std::shared_ptr<Node> const& parent, std::string const& name,
+	bool isPerspective, bool isEnabled, glm::mat4x4 projectionMatrix):
+	Node(parent, name),
+	isPerspective_{isPerspective},
+	isEnabled_{isEnabled},
+	projectionMatrix_{projectionMatrix} {}
+
 CameraNode::~CameraNode(){}
 
 bool CameraNode::getPerspective(){

@@ -27,12 +27,14 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
  ,star_object{}
+ ,orbit_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})} //camera position
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   createRandomStars();
   initializeGeometry();
   initializeShaderPrograms();
+  createOrbits();
 }
 
 //destructor
@@ -43,6 +45,9 @@ ApplicationSolar::~ApplicationSolar() {
 
   glDeleteBuffers(1, &star_object.vertex_BO);
   glDeleteVertexArrays(1, &star_object.vertex_AO);
+
+  glDeleteBuffers(1, &orbit_object.vertex_BO);
+  glDeleteVertexArrays(1, &orbit_object.vertex_AO);
 }
 
 void ApplicationSolar::render() const {
@@ -50,11 +55,15 @@ void ApplicationSolar::render() const {
 
 
   //calling the function to create planets
-  glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
-  drawStars();
 
   glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
   drawGraph(scene);
+
+  glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
+  drawOrbits(scene);
+
+  glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
+  drawStars();
 
 }
 
@@ -77,6 +86,7 @@ void ApplicationSolar::drawStars() const{
 
 SceneGraph ApplicationSolar::createPlanetSystem() const{
 
+
   // we load a circular model from the resources
   model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
@@ -84,6 +94,11 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   Node root{nullptr, "/"};
   auto root_pointer = std::make_shared<Node>(root);
   SceneGraph scene = SceneGraph("scene", root_pointer);
+
+  CameraNode camera{root_pointer, "main_camera", true, true, m_view_projection};
+  auto camera_pointer = std::make_shared<CameraNode>(camera);
+  //root_pointer->addChild(camera_pointer);
+
 
   //Constructor for Geometry Nodes (parent, name, size, speed, position(vec3), model.obj)
   //sun 
@@ -103,11 +118,13 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode merkury{merkury_holder_pointer, "merkury"}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
-  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{1.0f})*
+  float distance_to_center = 3.0f;
+  merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{0.7f})*
                                     (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{3.0f, 0.0f, 0.0f}))*
                                     (glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   merkury_holder_pointer->addChild(merkury_pointer);
   scene.geometry_nodes_.push_back(merkury_pointer);
+
 
   //venus
   GeometryNode venus{root_pointer, "venus", 17.0f, 1.0f, {13.0f, 0.0f, 0.0f}, planet_model}; 
@@ -181,10 +198,57 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
         
       }
 
-
 }
 
+void ApplicationSolar::createOrbits() {
+  std::vector<float> orbits;
+  uint points_in_circle = 3600;
 
+  for (int i = 0; i < points_in_circle; ++i) {
+    GLfloat x = cos(2*M_PI/points_in_circle*i);
+    GLfloat y = 0;
+    GLfloat z = sin(2*M_PI/points_in_circle*i);
+    orbits.push_back(x);
+    orbits.push_back(y);
+    orbits.push_back(z);
+  }
+
+  glGenVertexArrays(1, &orbit_object.vertex_AO);
+  glBindVertexArray(orbit_object.vertex_AO);
+
+  glGenBuffers(1, &orbit_object.vertex_BO);
+  glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
+  glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(sizeof(float)*orbits.size()), orbits.data(), GL_STATIC_DRAW);
+
+  //Attributes - index, size(3-dimensional), dtype, normalize data, byte-distance, offsets in bytes
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*3), 0);
+
+  orbit_object.draw_mode = GL_LINE_LOOP; 
+  orbit_object.num_elements = GLsizei(points_in_circle);
+}
+
+void ApplicationSolar::drawOrbits(SceneGraph const& scene) const{
+
+
+  for (auto const& planet : scene.geometry_nodes_) {
+      glm::fmat4 orbit_matrix = glm::fmat4{1.0f};
+      float radius = 1.0f;
+      orbit_matrix = glm::scale(orbit_matrix, glm::fvec3{radius, radius, radius});
+
+
+      glUseProgram(m_shaders.at("orbit").handle);
+
+      glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("OrbitMatrix"),
+                               1, GL_FALSE, glm::value_ptr(orbit_matrix));
+
+
+      glBindVertexArray(orbit_object.vertex_AO);
+      
+      glDrawArrays(orbit_object.draw_mode, GLint(0), orbit_object.num_elements);
+
+    }
+}
 
 void ApplicationSolar::createRandomStars() {
   std::vector<float> positions_and_colors;
@@ -243,6 +307,12 @@ void ApplicationSolar::uploadView() {
   glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ModelViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_transform));
 
+  glUseProgram(m_shaders.at("orbit").handle);
+  glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"),
+                     1, GL_FALSE, glm::value_ptr(view_matrix));
+
+
+
 }
 
 void ApplicationSolar::uploadProjection() {
@@ -253,6 +323,10 @@ void ApplicationSolar::uploadProjection() {
 
   glUseProgram(m_shaders.at("star").handle);
   glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ProjectionMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+
+  glUseProgram(m_shaders.at("orbit").handle);
+  glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
 
@@ -283,6 +357,14 @@ void ApplicationSolar::initializeShaderPrograms() {
   // request uniform locations for shader program 
   m_shaders.at("star").u_locs["ModelViewMatrix"] = -1;
   m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
+
+
+  m_shaders.emplace("orbit", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/orbit.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/orbit.frag"}}});
+  // request uniform locations for shader program
+  m_shaders.at("orbit").u_locs["OrbitMatrix"] = -1;
+  m_shaders.at("orbit").u_locs["ViewMatrix"] = -1;
+  m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
 
 }
 

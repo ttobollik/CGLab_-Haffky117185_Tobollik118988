@@ -12,7 +12,8 @@ Node::Node() :
 	path_{},
 	localTransform_{},
 	worldTransform_{},
-	speed_{} {}
+	speed_{},
+	distance_to_center_{} {}
 
 Node::Node(std::shared_ptr<Node> parent, std::string const& name) : 
 	parent_{parent},
@@ -22,7 +23,8 @@ Node::Node(std::shared_ptr<Node> parent, std::string const& name) :
 	path_{},
 	localTransform_{1.0f},
 	worldTransform_{1.0f},
-	speed_{1.0f} {
+	speed_{1.0f},
+	distance_to_center_{0.0f} {
 		//if the node has a parent
 		if (parent != nullptr) {
 			depth_ = parent_->getDepth() + 1; //calculates depth for new node

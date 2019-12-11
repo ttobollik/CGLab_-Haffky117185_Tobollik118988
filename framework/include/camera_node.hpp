@@ -11,6 +11,8 @@ Camera Node which inherits from Node. Will be needed fro View-Projection-Matrix
 class CameraNode : Node {
 	public:
 		CameraNode();
+		CameraNode(std::shared_ptr<Node> const& parent, std::string const& name,
+	bool isPerspective, bool isEnabled, glm::mat4x4 projectionMatrix);
 		~CameraNode();
 		bool getPerspective();
 		bool getEnabled();
