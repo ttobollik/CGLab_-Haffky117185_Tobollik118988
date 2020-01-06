@@ -4,6 +4,7 @@
 #include <iostream>
 #include "node.hpp"
 #include "geometry_node.hpp"
+#include "PointLightNode.hpp"
 #include <memory>
 
 
@@ -25,6 +26,7 @@ public:
 
 	void printGraph();
 	std::vector<std::shared_ptr<GeometryNode>> geometry_nodes_;
+	std::vector<std::shared_ptr<PointLightNode>> point_light_nodes_;
 
 private:
 	//setter are private because of Singleton

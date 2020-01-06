@@ -97,6 +97,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   PointLightNode sun_light{root_pointer, "sunlight", 0.8f, {0.5f, 0.5f, 0.0f}};
   auto sunlight_pointer = std::make_shared<PointLightNode>(sun_light);
   root_pointer->addChild(sunlight_pointer);
+  scene.point_light_nodes_.push_back(sunlight_pointer);
 
   //sun
   GeometryNode sun{root_pointer, "sun", {0.5f, 0.2f, 0.2f}}; 
@@ -275,7 +276,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   return scene;
 }
 
-//gets vector of pointers to children and draws everything in the scenegraph, which is below the root
+//gets vector of pointers to children and draws everything in the scenegraph, which is below the root------------------------------------------------------
 void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
    for (auto current_node : scene.geometry_nodes_) {
@@ -294,8 +295,25 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
         // bind the VAO to draw
         glBindVertexArray(planet_object.vertex_AO);
 
-        int location = glGetUniformLocation(m_shaders.at("planet").handle, "planet_color");
-        glUniform3f(location,current_node->getColor()[0],current_node->getColor()[1],current_node->getColor()[2] );
+        //Setting the Uniforms for the specified location (first argument) and second are the colors (rgb) from planets ***************
+        glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
+                  current_node->getColor()[0],current_node->getColor()[1],current_node->getColor()[2] );
+
+        //*****************************************************************************************************************************
+        for (auto light : scene.point_light_nodes_) {
+            glm::fvec3 light_color = light->getLightColor();
+            float light_intensity = light->getLightIntensity();
+            glm::fvec4 light_position = light->getWorldTransform()*glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f); //World Transform returns a matrix, so we convert to fvec4 by multiplication
+
+            //sending data to the shaders (setting uniforms) --> important to upate shader at simple frag
+            glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "light_color"),
+                        light_color[0],light_color[1], light_color[2]);
+            glUniform1f(glGetUniformLocation(m_shaders.at("planet").handle, "light_intensity"),
+                        light_intensity);
+            glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
+                        light_position[0],light_position[1], light_position[2]);
+
+        }
 
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
@@ -452,7 +470,7 @@ void ApplicationSolar::uploadUniforms() {
   uploadProjection();
 }
 
-///////////////////////////// intialisation functions /////////////////////////
+///////////////////////////// initialisation functions /////////////////////////
 // load shader sources
 void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container
