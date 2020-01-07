@@ -6,6 +6,7 @@
 #include "structs.hpp"
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
+#include "PointLightNode.hpp"
 #include "node.hpp"
 #include "scene_graph.hpp"
 

@@ -127,7 +127,7 @@ void Node::setWorldTransform(glm::mat4 const& transform){
 	worldTransform_ = transform;
 }
 
-//adding more children? addChild?
+
 void Node::addChild(std::shared_ptr<Node> const& node){
 	children_.push_back(node);
 }

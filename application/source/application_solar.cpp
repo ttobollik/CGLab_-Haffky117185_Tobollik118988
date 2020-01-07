@@ -93,8 +93,20 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   auto root_pointer = std::make_shared<Node>(root);
   SceneGraph scene = SceneGraph("scene", root_pointer);
 
+  //cameraNode 
+  CameraNode camera{root_pointer, "camera", true, true, m_view_projection};
+  std::shared_ptr<CameraNode> camera_pointer = std::make_shared<CameraNode>(camera);
+  //root_pointer->addChild(camera_pointer); throws error
+  scene.camera_ = camera_pointer;
+
+  //pointLightNode
+  PointLightNode sun_light{root_pointer, "sunlight", 1.3f, {0.5f, 0.6f, 0.0f}};
+  auto sunlight_pointer = std::make_shared<PointLightNode>(sun_light);
+  root_pointer->addChild(sunlight_pointer);
+  scene.point_light_nodes_.push_back(sunlight_pointer);
+
   //sun
-  GeometryNode sun{root_pointer, "sun"}; 
+  GeometryNode sun{root_pointer, "sun", {0.6f, 0.8f, 0.0f}}; 
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
   sun_pointer->setGeometry(planet_model);
   sun_pointer->setLocalTransform(glm::scale(sun_pointer->getLocalTransform(), glm::fvec3{2.0f})*
@@ -109,7 +121,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(merkury_holder_pointer);
 
   //merkury
-  GeometryNode merkury{merkury_holder_pointer, "merkury"}; 
+  GeometryNode merkury{merkury_holder_pointer, "merkury", {0.1f, 0.2f, 0.2f}}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
   float merkury_distance = 7.0f;
@@ -127,7 +139,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(venus_holder_pointer);
 
   //venus
-  GeometryNode venus{venus_holder_pointer, "venus"}; 
+  GeometryNode venus{venus_holder_pointer, "venus", {0.2f, 0.2f, 0.8f}}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   venus_pointer->setGeometry(planet_model);
   float venus_distance = 12.0f;
@@ -145,7 +157,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(earth_holder_pointer);
 
   //earth
-  GeometryNode earth{earth_holder_pointer, "earth"}; 
+  GeometryNode earth{earth_holder_pointer, "earth", {0.0f, 0.9f, 0.2f}}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   earth_pointer->setGeometry(planet_model);
   float earth_distance = 14.0f;
@@ -163,7 +175,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   earth_pointer->addChild(moon_holder_pointer);
 
   //moon
-  GeometryNode moon{moon_holder_pointer, "moon"}; 
+  GeometryNode moon{moon_holder_pointer, "moon", {0.6f, 0.6f, 0.2f}}; 
   auto moon_pointer = std::make_shared<GeometryNode>(moon);
   moon_pointer->setGeometry(planet_model);
   moon_pointer->setLocalTransform(glm::scale(moon_pointer->getLocalTransform(), glm::fvec3{0.3})*
@@ -179,7 +191,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(mars_holder_pointer);
 
   //mars
-  GeometryNode mars{mars_holder_pointer, "mars"}; 
+  GeometryNode mars{mars_holder_pointer, "mars", {0.5f, 0.5f, 0.5f}}; 
   auto mars_pointer = std::make_shared<GeometryNode>(mars);
   mars_pointer->setGeometry(planet_model);
   float mars_distance = 30.0f;
@@ -197,7 +209,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(jupiter_holder_pointer);
 
   //jupiter
-  GeometryNode jupiter{jupiter_holder_pointer, "jupiter"}; 
+  GeometryNode jupiter{jupiter_holder_pointer, "jupiter", {0.2f, 0.2f, 0.2f}}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   jupiter_pointer->setGeometry(planet_model);
   float jupiter_distance = 10.0f;
@@ -215,7 +227,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(saturn_holder_pointer);
 
   //saturn
-  GeometryNode saturn{saturn_holder_pointer, "saturn"}; 
+  GeometryNode saturn{saturn_holder_pointer, "saturn", {0.9f, 0.2f, 0.2f}}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   saturn_pointer->setGeometry(planet_model);
   float saturn_distance = 12.0f;
@@ -233,7 +245,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(uranus_holder_pointer);
 
   //uranus
-  GeometryNode uranus{uranus_holder_pointer, "uranus"}; 
+  GeometryNode uranus{uranus_holder_pointer, "uranus", {0.2f, 0.2f, 0.2f}}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   uranus_pointer->setGeometry(planet_model);
   float uranus_distance = 50.0f;
@@ -251,7 +263,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(neptune_holder_pointer);
 
   //neptune
-  GeometryNode neptune{neptune_holder_pointer, "neptune"}; 
+  GeometryNode neptune{neptune_holder_pointer, "neptune", {0.0f, 0.2f, 0.8f}}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   neptune_pointer->setGeometry(planet_model);
   float neptune_distance = 15.0f;
@@ -270,7 +282,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   return scene;
 }
 
-//gets vector of pointers to children and draws everything in the scenegraph, which is below the root
+//gets vector of pointers to children and draws everything in the scenegraph, which is below the root------------------------------------------------------
 void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
    for (auto current_node : scene.geometry_nodes_) {
@@ -288,6 +300,26 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
         // bind the VAO to draw
         glBindVertexArray(planet_object.vertex_AO);
+
+        //Setting the Uniforms for the specified location (first argument) and second are the colors (rgb) from planets ***************
+        glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
+                  current_node->getColor()[0],current_node->getColor()[1],current_node->getColor()[2] );
+
+        //*****************************************************************************************************************************
+        for (auto light : scene.point_light_nodes_) {
+            glm::fvec3 light_color = light->getLightColor();
+            float light_intensity = light->getLightIntensity();
+            glm::fvec4 light_position = light->getWorldTransform()*glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f); //World Transform returns a matrix, so we convert to fvec4 by multiplication
+
+            //sending data to the shaders (setting uniforms) --> important to upate shader at simple frag
+            glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "light_color"),
+                        light_color[0],light_color[1], light_color[2]);
+            glUniform1f(glGetUniformLocation(m_shaders.at("planet").handle, "light_intensity"),
+                        light_intensity);
+            glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "light_position"),
+                        light_position[0],light_position[1], light_position[2]);
+
+        }
 
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
@@ -444,7 +476,7 @@ void ApplicationSolar::uploadUniforms() {
   uploadProjection();
 }
 
-///////////////////////////// intialisation functions /////////////////////////
+///////////////////////////// initialisation functions /////////////////////////
 // load shader sources
 void ApplicationSolar::initializeShaderPrograms() {
   // store shader program objects in container
