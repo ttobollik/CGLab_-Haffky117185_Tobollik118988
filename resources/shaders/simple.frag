@@ -36,15 +36,15 @@ void main() {
 	//Formel für Blinn Phong: Ambient + LichtIntensitaetsformel * DiffuseLicht Formel * refelctivity + SpecularLight(Blinn)
 	//Ambient und Intenstitaet gegeben
 
-	float diffuse_light = max(dot(normal, light_vector), 0) * light_intensity;
+	float diffuse_light = max(dot(normal, light_vector), 0);
 	vec3 diffuse = diffuse_color * light_color * diffuse_light;
 
 	//This is the Blinn Phong Formula
 	//vec3 specular = (halfway_vector * view_vector);
-	float specular_light = pow(max(dot(halfway_vector, normal), 0),4)*light_intensity;
+	float specular_light = pow(max(dot(halfway_vector, normal), 0),4);
 	vec3 specular = specular_color * specular_light;
 
-	out_Color = vec4((ambient_color + diffuse)* planet_color + specular *light_color, 1.0);
+	out_Color = vec4((ambient_color + diffuse)* planet_color *light_intensity+ specular * light_color, 1.0);
 
 
 }
