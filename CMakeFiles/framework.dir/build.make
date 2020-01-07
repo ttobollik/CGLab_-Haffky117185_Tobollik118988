@@ -57,9 +57,33 @@ include CMakeFiles/framework.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/framework.dir/flags.make
 
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o: CMakeFiles/framework.dir/flags.make
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o: framework/source/PointLightNode.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/PointLightNode.cpp
+
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/PointLightNode.cpp > CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.i
+
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/PointLightNode.cpp -o CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.s
+
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.requires:
+
+.PHONY : CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.requires
+
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.provides: CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.requires
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.provides.build
+.PHONY : CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.provides
+
+CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.provides.build: CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o
+
+
 CMakeFiles/framework.dir/framework/source/application.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/application.cpp.o: framework/source/application.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/framework.dir/framework/source/application.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/framework.dir/framework/source/application.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/application.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/application.cpp
 
 CMakeFiles/framework.dir/framework/source/application.cpp.i: cmake_force
@@ -83,7 +107,7 @@ CMakeFiles/framework.dir/framework/source/application.cpp.o.provides.build: CMak
 
 CMakeFiles/framework.dir/framework/source/camera_node.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/camera_node.cpp.o: framework/source/camera_node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/framework.dir/framework/source/camera_node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/framework.dir/framework/source/camera_node.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/camera_node.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/camera_node.cpp
 
 CMakeFiles/framework.dir/framework/source/camera_node.cpp.i: cmake_force
@@ -107,7 +131,7 @@ CMakeFiles/framework.dir/framework/source/camera_node.cpp.o.provides.build: CMak
 
 CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o: framework/source/geometry_node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/geometry_node.cpp
 
 CMakeFiles/framework.dir/framework/source/geometry_node.cpp.i: cmake_force
@@ -131,7 +155,7 @@ CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o.provides.build: CM
 
 CMakeFiles/framework.dir/framework/source/model.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/model.cpp.o: framework/source/model.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/framework.dir/framework/source/model.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/framework.dir/framework/source/model.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/model.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/model.cpp
 
 CMakeFiles/framework.dir/framework/source/model.cpp.i: cmake_force
@@ -155,7 +179,7 @@ CMakeFiles/framework.dir/framework/source/model.cpp.o.provides.build: CMakeFiles
 
 CMakeFiles/framework.dir/framework/source/model_loader.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/model_loader.cpp.o: framework/source/model_loader.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/framework.dir/framework/source/model_loader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/framework.dir/framework/source/model_loader.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/model_loader.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/model_loader.cpp
 
 CMakeFiles/framework.dir/framework/source/model_loader.cpp.i: cmake_force
@@ -179,7 +203,7 @@ CMakeFiles/framework.dir/framework/source/model_loader.cpp.o.provides.build: CMa
 
 CMakeFiles/framework.dir/framework/source/node.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/node.cpp.o: framework/source/node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/framework.dir/framework/source/node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/framework.dir/framework/source/node.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/node.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/node.cpp
 
 CMakeFiles/framework.dir/framework/source/node.cpp.i: cmake_force
@@ -203,7 +227,7 @@ CMakeFiles/framework.dir/framework/source/node.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o: framework/source/scene_graph.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/scene_graph.cpp
 
 CMakeFiles/framework.dir/framework/source/scene_graph.cpp.i: cmake_force
@@ -227,7 +251,7 @@ CMakeFiles/framework.dir/framework/source/scene_graph.cpp.o.provides.build: CMak
 
 CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o: framework/source/shader_loader.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/shader_loader.cpp
 
 CMakeFiles/framework.dir/framework/source/shader_loader.cpp.i: cmake_force
@@ -251,7 +275,7 @@ CMakeFiles/framework.dir/framework/source/shader_loader.cpp.o.provides.build: CM
 
 CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o: framework/source/texture_loader.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/texture_loader.cpp
 
 CMakeFiles/framework.dir/framework/source/texture_loader.cpp.i: cmake_force
@@ -275,7 +299,7 @@ CMakeFiles/framework.dir/framework/source/texture_loader.cpp.o.provides.build: C
 
 CMakeFiles/framework.dir/framework/source/utils.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/utils.cpp.o: framework/source/utils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/framework.dir/framework/source/utils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/framework.dir/framework/source/utils.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/utils.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/utils.cpp
 
 CMakeFiles/framework.dir/framework/source/utils.cpp.i: cmake_force
@@ -299,7 +323,7 @@ CMakeFiles/framework.dir/framework/source/utils.cpp.o.provides.build: CMakeFiles
 
 CMakeFiles/framework.dir/framework/source/window_handler.cpp.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/framework/source/window_handler.cpp.o: framework/source/window_handler.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/framework.dir/framework/source/window_handler.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/framework.dir/framework/source/window_handler.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/framework/source/window_handler.cpp.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/window_handler.cpp
 
 CMakeFiles/framework.dir/framework/source/window_handler.cpp.i: cmake_force
@@ -323,7 +347,7 @@ CMakeFiles/framework.dir/framework/source/window_handler.cpp.o.provides.build: C
 
 CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o: CMakeFiles/framework.dir/flags.make
 CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o: external/tinyobjloader-aa07206/tiny_obj_loader.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o -c /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/external/tinyobjloader-aa07206/tiny_obj_loader.cc
 
 CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.i: cmake_force
@@ -347,6 +371,7 @@ CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o.pro
 
 # Object files for target framework
 framework_OBJECTS = \
+"CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o" \
 "CMakeFiles/framework.dir/framework/source/application.cpp.o" \
 "CMakeFiles/framework.dir/framework/source/camera_node.cpp.o" \
 "CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o" \
@@ -363,6 +388,7 @@ framework_OBJECTS = \
 # External object files for target framework
 framework_EXTERNAL_OBJECTS =
 
+Debug/libframework.a: CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o
 Debug/libframework.a: CMakeFiles/framework.dir/framework/source/application.cpp.o
 Debug/libframework.a: CMakeFiles/framework.dir/framework/source/camera_node.cpp.o
 Debug/libframework.a: CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o
@@ -377,7 +403,7 @@ Debug/libframework.a: CMakeFiles/framework.dir/framework/source/window_handler.c
 Debug/libframework.a: CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o
 Debug/libframework.a: CMakeFiles/framework.dir/build.make
 Debug/libframework.a: CMakeFiles/framework.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX static library Debug/libframework.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX static library Debug/libframework.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/framework.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/framework.dir/link.txt --verbose=$(VERBOSE)
 
@@ -386,6 +412,7 @@ CMakeFiles/framework.dir/build: Debug/libframework.a
 
 .PHONY : CMakeFiles/framework.dir/build
 
+CMakeFiles/framework.dir/requires: CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o.requires
 CMakeFiles/framework.dir/requires: CMakeFiles/framework.dir/framework/source/application.cpp.o.requires
 CMakeFiles/framework.dir/requires: CMakeFiles/framework.dir/framework/source/camera_node.cpp.o.requires
 CMakeFiles/framework.dir/requires: CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o.requires

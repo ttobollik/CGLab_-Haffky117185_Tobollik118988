@@ -262,6 +262,33 @@ external/tinyobjloader-aa07206/tiny_obj_loader.cc.s:
 	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.s
 .PHONY : external/tinyobjloader-aa07206/tiny_obj_loader.cc.s
 
+framework/source/PointLightNode.o: framework/source/PointLightNode.cpp.o
+
+.PHONY : framework/source/PointLightNode.o
+
+# target to build an object file
+framework/source/PointLightNode.cpp.o:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o
+.PHONY : framework/source/PointLightNode.cpp.o
+
+framework/source/PointLightNode.i: framework/source/PointLightNode.cpp.i
+
+.PHONY : framework/source/PointLightNode.i
+
+# target to preprocess a source file
+framework/source/PointLightNode.cpp.i:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.i
+.PHONY : framework/source/PointLightNode.cpp.i
+
+framework/source/PointLightNode.s: framework/source/PointLightNode.cpp.s
+
+.PHONY : framework/source/PointLightNode.s
+
+# target to generate assembly for a file
+framework/source/PointLightNode.cpp.s:
+	$(MAKE) -f CMakeFiles/framework.dir/build.make CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.s
+.PHONY : framework/source/PointLightNode.cpp.s
+
 framework/source/application.o: framework/source/application.cpp.o
 
 .PHONY : framework/source/application.o
@@ -581,6 +608,9 @@ help:
 	@echo "... external/tinyobjloader-aa07206/tiny_obj_loader.o"
 	@echo "... external/tinyobjloader-aa07206/tiny_obj_loader.i"
 	@echo "... external/tinyobjloader-aa07206/tiny_obj_loader.s"
+	@echo "... framework/source/PointLightNode.o"
+	@echo "... framework/source/PointLightNode.i"
+	@echo "... framework/source/PointLightNode.s"
 	@echo "... framework/source/application.o"
 	@echo "... framework/source/application.i"
 	@echo "... framework/source/application.s"

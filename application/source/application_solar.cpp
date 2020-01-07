@@ -106,7 +106,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   scene.point_light_nodes_.push_back(sunlight_pointer);
 
   //sun
-  GeometryNode sun{root_pointer, "sun", {0.6f, 0.8f, 0.0f}}; 
+  GeometryNode sun{root_pointer, "sun", {1.0f, 0.863f, 0.0f}}; 
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
   sun_pointer->setGeometry(planet_model);
   sun_pointer->setLocalTransform(glm::scale(sun_pointer->getLocalTransform(), glm::fvec3{2.0f})*
@@ -121,7 +121,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(merkury_holder_pointer);
 
   //merkury
-  GeometryNode merkury{merkury_holder_pointer, "merkury", {0.1f, 0.2f, 0.2f}}; 
+  GeometryNode merkury{merkury_holder_pointer, "merkury", {0.667f, 0.667f, 0.667f}}; 
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
   float merkury_distance = 7.0f;
@@ -139,7 +139,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(venus_holder_pointer);
 
   //venus
-  GeometryNode venus{venus_holder_pointer, "venus", {0.2f, 0.2f, 0.8f}}; 
+  GeometryNode venus{venus_holder_pointer, "venus", {1.0f, 0.8f, 0.03f}}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   venus_pointer->setGeometry(planet_model);
   float venus_distance = 12.0f;
@@ -157,7 +157,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(earth_holder_pointer);
 
   //earth
-  GeometryNode earth{earth_holder_pointer, "earth", {0.0f, 0.9f, 0.2f}}; 
+  GeometryNode earth{earth_holder_pointer, "earth", {0.0f, 0.2f, 0.9f}}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   earth_pointer->setGeometry(planet_model);
   float earth_distance = 14.0f;
@@ -175,7 +175,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   earth_pointer->addChild(moon_holder_pointer);
 
   //moon
-  GeometryNode moon{moon_holder_pointer, "moon", {0.6f, 0.6f, 0.2f}}; 
+  GeometryNode moon{moon_holder_pointer, "moon", {0.667f, 0.667f, 0.667f}}; 
   auto moon_pointer = std::make_shared<GeometryNode>(moon);
   moon_pointer->setGeometry(planet_model);
   moon_pointer->setLocalTransform(glm::scale(moon_pointer->getLocalTransform(), glm::fvec3{0.3})*
@@ -191,7 +191,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(mars_holder_pointer);
 
   //mars
-  GeometryNode mars{mars_holder_pointer, "mars", {0.5f, 0.5f, 0.5f}}; 
+  GeometryNode mars{mars_holder_pointer, "mars", {1.0f, 0.1f, 0.1f}}; 
   auto mars_pointer = std::make_shared<GeometryNode>(mars);
   mars_pointer->setGeometry(planet_model);
   float mars_distance = 30.0f;
@@ -209,7 +209,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(jupiter_holder_pointer);
 
   //jupiter
-  GeometryNode jupiter{jupiter_holder_pointer, "jupiter", {0.2f, 0.2f, 0.2f}}; 
+  GeometryNode jupiter{jupiter_holder_pointer, "jupiter", {0.0f, 0.9f, 0.1f}}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   jupiter_pointer->setGeometry(planet_model);
   float jupiter_distance = 10.0f;
@@ -227,7 +227,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(saturn_holder_pointer);
 
   //saturn
-  GeometryNode saturn{saturn_holder_pointer, "saturn", {0.9f, 0.2f, 0.2f}}; 
+  GeometryNode saturn{saturn_holder_pointer, "saturn", {0.694f, 0.052f, 0.788f}}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   saturn_pointer->setGeometry(planet_model);
   float saturn_distance = 12.0f;
@@ -245,7 +245,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(uranus_holder_pointer);
 
   //uranus
-  GeometryNode uranus{uranus_holder_pointer, "uranus", {0.2f, 0.2f, 0.2f}}; 
+  GeometryNode uranus{uranus_holder_pointer, "uranus", {1.0f, 1.0f, 1.0f}}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   uranus_pointer->setGeometry(planet_model);
   float uranus_distance = 50.0f;
@@ -263,7 +263,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   root_pointer->addChild(neptune_holder_pointer);
 
   //neptune
-  GeometryNode neptune{neptune_holder_pointer, "neptune", {0.0f, 0.2f, 0.8f}}; 
+  GeometryNode neptune{neptune_holder_pointer, "neptune", {0.3f, 0.9f, 1.0f}}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   neptune_pointer->setGeometry(planet_model);
   float neptune_distance = 15.0f;

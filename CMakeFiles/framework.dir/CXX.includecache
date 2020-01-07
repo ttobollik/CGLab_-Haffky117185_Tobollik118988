@@ -38,6 +38,10 @@ vector
 map
 -
 
+/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/PointLightNode.cpp
+PointLightNode.hpp
+-
+
 /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/application.cpp
 application.hpp
 /home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/application.hpp
@@ -1214,6 +1218,12 @@ vector
 map
 -
 
+framework/include/PointLightNode.hpp
+node.hpp
+-
+model.hpp
+-
+
 framework/include/application.hpp
 structs.hpp
 framework/include/structs.hpp
@@ -1275,6 +1285,12 @@ iostream
 -
 node.hpp
 framework/include/node.hpp
+geometry_node.hpp
+framework/include/geometry_node.hpp
+PointLightNode.hpp
+framework/include/PointLightNode.hpp
+camera_node.hpp
+framework/include/camera_node.hpp
 memory
 -
 

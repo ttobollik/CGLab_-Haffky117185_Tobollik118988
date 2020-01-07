@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o"
   "CMakeFiles/framework.dir/framework/source/application.cpp.o"
   "CMakeFiles/framework.dir/framework/source/camera_node.cpp.o"
   "CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o"

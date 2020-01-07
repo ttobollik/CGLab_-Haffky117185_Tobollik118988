@@ -112,7 +112,9 @@ CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o
  external/glm-0.9.6.3/glm/vec4.hpp
  external/glm-0.9.6.3/glm/vector_relational.hpp
  external/tinyobjloader-aa07206/tiny_obj_loader.h
+ framework/include/PointLightNode.hpp
  framework/include/application.hpp
+ framework/include/camera_node.hpp
  framework/include/geometry_node.hpp
  framework/include/model.hpp
  framework/include/model_loader.hpp

@@ -111,7 +111,9 @@ CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: external
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: external/glm-0.9.6.3/glm/vec4.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: external/glm-0.9.6.3/glm/vector_relational.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: external/tinyobjloader-aa07206/tiny_obj_loader.h
+CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/PointLightNode.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/application.hpp
+CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/camera_node.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/geometry_node.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/model.hpp
 CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o: framework/include/model_loader.hpp

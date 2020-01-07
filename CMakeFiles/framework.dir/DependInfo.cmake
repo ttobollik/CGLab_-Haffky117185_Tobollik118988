@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/external/tinyobjloader-aa07206/tiny_obj_loader.cc" "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles/framework.dir/external/tinyobjloader-aa07206/tiny_obj_loader.cc.o"
+  "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/PointLightNode.cpp" "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles/framework.dir/framework/source/PointLightNode.cpp.o"
   "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/application.cpp" "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles/framework.dir/framework/source/application.cpp.o"
   "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/camera_node.cpp" "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles/framework.dir/framework/source/camera_node.cpp.o"
   "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/framework/source/geometry_node.cpp" "/home/jonashaffky/Dokumente/Studium/Computergrafik/CGLab_-Haffky117185_Tobollik118988/CMakeFiles/framework.dir/framework/source/geometry_node.cpp.o"
