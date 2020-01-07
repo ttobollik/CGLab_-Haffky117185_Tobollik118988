@@ -41,7 +41,7 @@ void main() {
 
 	//This is the Blinn Phong Formula
 	//vec3 specular = (halfway_vector * view_vector);
-	float specular_light = pow(max(dot(halfway_vector, normal), 0),4);
+	float specular_light = pow(max(dot(halfway_vector, normal), 0),24);
 	vec3 specular = specular_color * specular_light;
 
 	out_Color = vec4((ambient_color + diffuse)* planet_color *light_intensity+ specular * light_color, 1.0);

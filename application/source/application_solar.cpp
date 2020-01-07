@@ -100,7 +100,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   scene.camera_ = camera_pointer;
 
   //pointLightNode
-  PointLightNode sun_light{root_pointer, "sunlight", 1.3f, {0.5f, 0.6f, 0.0f}};
+  PointLightNode sun_light{root_pointer, "sunlight", 1.0f, {1.0f, 1.0f, 1.0f}};
   auto sunlight_pointer = std::make_shared<PointLightNode>(sun_light);
   root_pointer->addChild(sunlight_pointer);
   scene.point_light_nodes_.push_back(sunlight_pointer);
