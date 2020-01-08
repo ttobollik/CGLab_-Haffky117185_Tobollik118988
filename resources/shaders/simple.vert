@@ -27,8 +27,8 @@ void main(void)
 	pass_Normal = (NormalMatrix * vec4(in_Normal, 0.0)).xyz;
 
 	/*component selection syntax allows multiple components to be selected by appending their names after the period p.53*/
-	pass_VertexPosition = ((ViewMatrix*ModelMatrix) * vec4(in_Position, 1.0)).xyz;
+	pass_VertexPosition = (ModelMatrix * vec4(in_Position, 1.0)).xyz;
 	pass_CameraPosition = (ViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-	pass_ViewMatrix = ViewMatrix;
+
 
 }

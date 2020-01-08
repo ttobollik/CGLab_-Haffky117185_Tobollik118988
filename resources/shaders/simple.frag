@@ -3,7 +3,6 @@
 in vec3 pass_Normal;
 in vec3 pass_VertexPosition;
 in vec3 pass_CameraPosition;
-in mat4 pass_ViewMatrix;
 
 out vec4 out_Color;
 
@@ -12,7 +11,7 @@ uniform vec3 light_color;
 uniform float light_intensity;
 uniform vec3 light_position;
 
-vec3 ambient_color = vec3(0.2f, 0.2f, 0.2f);
+vec3 ambient_color = vec3(0.1f, 0.1f, 0.1f);
 vec3 diffuse_color = vec3(0.3f, 0.3f, 0.3f);
 vec3 specular_color = vec3(1.0f, 1.0f, 1.0f);
 float alpha = 0;
