@@ -59,8 +59,8 @@ void ApplicationSolar::render() const {
   glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
   drawGraph(scene);
 
-  glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
-  drawOrbits(scene);
+  //glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
+  //drawOrbits(scene);
 
   glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
   drawStars();
