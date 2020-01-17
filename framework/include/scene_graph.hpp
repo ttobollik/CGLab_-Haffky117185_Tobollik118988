@@ -18,6 +18,7 @@ public:
 	//static SceneGraph* getInstance(std::string name, std::shared_ptr<Node> root);
 
 	//constructor
+	SceneGraph();
 	SceneGraph(std::string name, std::shared_ptr<Node> root);
 	//destructor
 	~SceneGraph();

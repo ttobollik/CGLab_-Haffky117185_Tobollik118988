@@ -30,19 +30,20 @@ class ApplicationSolar : public Application {
 
 
   // Function that creates multiple planets (by hand)
-  SceneGraph createPlanetSystem() const;
+  void createPlanetSystem();
   // Function that creates a set number of stars. Parameters are set inside function
   void createRandomStars();
   void createOrbits();
 
-  void drawGraph(SceneGraph scene) const;
+  void drawGraph() const;
   void drawStars() const;
-  void drawOrbits(SceneGraph const& scene)const;
+  void drawOrbits();
 
 
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
+  void initializeTexture();
   // update uniform values
   void uploadUniforms();
   // upload projection matrix
@@ -54,6 +55,7 @@ class ApplicationSolar : public Application {
   model_object planet_object;
   model_object star_object;
   model_object orbit_object;
+  
 
 
   
@@ -61,6 +63,8 @@ class ApplicationSolar : public Application {
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
+
+  SceneGraph scene_;
 
 };
 

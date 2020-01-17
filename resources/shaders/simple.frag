@@ -3,6 +3,8 @@
 in vec3 pass_Normal;
 in vec3 pass_VertexPosition;
 in vec3 pass_CameraPosition;
+in vec2 pass_TexCoord;
+in mat4 pass_ViewMatrix;
 
 out vec4 out_Color;
 
@@ -16,7 +18,7 @@ vec3 diffuse_color = vec3(0.3f, 0.3f, 0.3f);
 vec3 specular_color = vec3(1.0f, 1.0f, 1.0f);
 float alpha = 0;
 
-
+uniform sampler2D TextureSampler;
 
 void main() {
 	//out_Color = vec4(planet_color, 1.0); //--> simple shader to just draw color
@@ -25,12 +27,14 @@ void main() {
 
 	//Variables from function
 	//some geometric functions already exists in glsl (length, normalize ... ) p. 86 -89
+
 	vec3 normal = normalize(pass_Normal);
+
 	//Light Direction vector is the Light Position minus the Vertex Position
-	vec3 light_vector = normalize(light_position - pass_VertexPosition);
+	vec3 light_vector = normalize((pass_ViewMatrix*vec4(light_position,1.0)).xyz - pass_VertexPosition);
 	vec3 view_vector = normalize(pass_CameraPosition - pass_VertexPosition);
 
-	vec3 halfway_vector = normalize(light_vector + view_vector);
+	vec3 halfway_vector = normalize(view_vector + light_vector);
 
 	//Formel für Blinn Phong: Ambient + LichtIntensitaetsformel * DiffuseLicht Formel * refelctivity + SpecularLight(Blinn)
 	//Ambient und Intenstitaet gegeben
@@ -43,7 +47,11 @@ void main() {
 	float specular_light = pow(max(dot(halfway_vector, normal), 0),24);
 	vec3 specular = specular_color * specular_light;
 
-	vec4 blinn_final= vec4((ambient_color + diffuse)* planet_color *light_intensity+ specular * light_color, 1.0);
+	vec4 planetTexture = texture(TextureSampler, pass_TexCoord);
+	vec4 blinn_final= vec4((ambient_color + diffuse)* planetTexture.rgb + specular * light_color, 1.0);
+	
+	//normal blinn
+	//vec4 blinn_final= vec4((ambient_color + diffuse)* planet_color *light_intensity+ specular * light_color, 1.0);
 
 	out_Color = blinn_final;
 

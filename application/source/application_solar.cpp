@@ -5,6 +5,7 @@
 #include "shader_loader.hpp"
 #include "model_loader.hpp"
 #include "scene_graph.hpp"
+#include "texture_loader.hpp"
 
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding 
@@ -30,8 +31,11 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  ,orbit_object{}
  ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})} //camera position
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
+ ,scene_{}
 {
+  createPlanetSystem();
   createRandomStars();
+  initializeTexture();
   initializeGeometry();
   initializeShaderPrograms();
   createOrbits();
@@ -51,13 +55,12 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::render() const {
-  SceneGraph scene = createPlanetSystem();
-
-
+  //SceneGraph scene = createPlanetSystem();
   //calling the function to create planets
 
   glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
-  drawGraph(scene);
+  //initializeTexture();
+  drawGraph();
 
   //glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
   //drawOrbits(scene);
@@ -83,36 +86,37 @@ void ApplicationSolar::drawStars() const{
 }
 
 
-SceneGraph ApplicationSolar::createPlanetSystem() const{
+void ApplicationSolar::createPlanetSystem(){
 
   // we load a circular model from the resources
-  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL | model::TEXCOORD); //changes due to suggestion from Francesco
 
   // creating an empty root node with nullptr as parent, named /, path / and 0 depth
   Node root{nullptr, "/"};
   auto root_pointer = std::make_shared<Node>(root);
-  SceneGraph scene = SceneGraph("scene", root_pointer);
+  scene_ = SceneGraph("scene", root_pointer);
 
   //cameraNode 
   CameraNode camera{root_pointer, "camera", true, true, m_view_projection};
   std::shared_ptr<CameraNode> camera_pointer = std::make_shared<CameraNode>(camera);
   //root_pointer->addChild(camera_pointer); throws error
-  scene.camera_ = camera_pointer;
+  scene_.camera_ = camera_pointer;
 
   //pointLightNode
   PointLightNode sun_light{root_pointer, "sunlight", 1.0f, {1.0f, 1.0f, 1.0f}};
   auto sunlight_pointer = std::make_shared<PointLightNode>(sun_light);
   root_pointer->addChild(sunlight_pointer);
-  scene.point_light_nodes_.push_back(sunlight_pointer);
+  scene_.point_light_nodes_.push_back(sunlight_pointer);
 
   //sun
   GeometryNode sun{root_pointer, "sun", {1.0f, 0.863f, 0.0f}}; 
   auto sun_pointer = std::make_shared<GeometryNode>(sun);
   sun_pointer->setGeometry(planet_model);
+  sun_pointer->set_texture_path("sunmap.png");
   sun_pointer->setLocalTransform(glm::scale(sun_pointer->getLocalTransform(), glm::fvec3{2.0f})*
                                     (glm::translate(sun_pointer->getLocalTransform(), glm::fvec3{0.0f, 0.0f, 0.0f})));
   root_pointer->addChild(sun_pointer);
-  scene.geometry_nodes_.push_back(sun_pointer);
+  scene_.geometry_nodes_.push_back(sun_pointer);
 
   //holder node for merkury
   Node merkury_holder{root_pointer, "merkury_holder"};
@@ -125,12 +129,13 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   auto merkury_pointer = std::make_shared<GeometryNode>(merkury);
   merkury_pointer->setGeometry(planet_model);
   float merkury_distance = 7.0f;
+  merkury_pointer->set_texture_path("mercurymap.png"); //setting the filename for the texture
   merkury_pointer->setDistanceToCenter(merkury_distance);
   merkury_pointer->setLocalTransform(glm::scale(merkury_pointer->getLocalTransform(), glm::fvec3{0.4f})*
                                     (glm::translate(merkury_pointer->getLocalTransform(), glm::fvec3{merkury_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(merkury_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   merkury_holder_pointer->addChild(merkury_pointer);
-  scene.geometry_nodes_.push_back(merkury_pointer);
+  scene_.geometry_nodes_.push_back(merkury_pointer);
 
   //holder node for venus
   Node venus_holder{root_pointer, "venus_holder"};
@@ -142,13 +147,14 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode venus{venus_holder_pointer, "venus", {1.0f, 0.8f, 0.03f}}; 
   auto venus_pointer = std::make_shared<GeometryNode>(venus);
   venus_pointer->setGeometry(planet_model);
+  venus_pointer->set_texture_path("venusmap.png");
   float venus_distance = 12.0f;
   venus_pointer->setDistanceToCenter(venus_distance);
   venus_pointer->setLocalTransform(glm::scale(venus_pointer->getLocalTransform(), glm::fvec3{0.6})*
                                     (glm::translate(venus_pointer->getLocalTransform(), glm::fvec3{venus_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(venus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   venus_holder_pointer->addChild(venus_pointer);
-  scene.geometry_nodes_.push_back(venus_pointer);
+  scene_.geometry_nodes_.push_back(venus_pointer);
 
   //holder node for earth
   Node earth_holder{root_pointer, "earth_holder"};
@@ -160,13 +166,14 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode earth{earth_holder_pointer, "earth", {0.0f, 0.2f, 0.9f}}; 
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   earth_pointer->setGeometry(planet_model);
+  earth_pointer->set_texture_path("earthmap.png");
   float earth_distance = 14.0f;
   earth_pointer->setDistanceToCenter(earth_distance);
   earth_pointer->setLocalTransform(glm::scale(earth_pointer->getLocalTransform(), glm::fvec3{0.3})*
                                     (glm::translate(earth_pointer->getLocalTransform(), glm::fvec3{earth_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(earth_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   earth_holder_pointer->addChild(earth_pointer);
-  scene.geometry_nodes_.push_back(earth_pointer);
+  scene_.geometry_nodes_.push_back(earth_pointer);
 
   //holder node for moon
   Node moon_holder{earth_pointer, "moon_holder"};
@@ -182,7 +189,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
                                     (glm::translate(moon_pointer->getLocalTransform(), glm::fvec3{5.0f, 0.0f, 0.0f}))*
                                     (glm::rotate(moon_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   moon_holder_pointer->addChild(moon_pointer);
-  scene.geometry_nodes_.push_back(moon_pointer);
+  scene_.geometry_nodes_.push_back(moon_pointer);
 
   //holder node for mars
   Node mars_holder{root_pointer, "mars_holder"};
@@ -200,7 +207,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
                                     (glm::translate(mars_pointer->getLocalTransform(), glm::fvec3{mars_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(mars_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   mars_holder_pointer->addChild(mars_pointer);
-  scene.geometry_nodes_.push_back(mars_pointer);
+  scene_.geometry_nodes_.push_back(mars_pointer);
 
   //holder node for jupiter
   Node jupiter_holder{root_pointer, "jupiter_holder"};
@@ -212,13 +219,14 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode jupiter{jupiter_holder_pointer, "jupiter", {0.0f, 0.9f, 0.1f}}; 
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   jupiter_pointer->setGeometry(planet_model);
+  jupiter_pointer->set_texture_path("jupitermap.png");
   float jupiter_distance = 10.0f;
   jupiter_pointer->setDistanceToCenter(jupiter_distance);
   jupiter_pointer->setLocalTransform(glm::scale(jupiter_pointer->getLocalTransform(), glm::fvec3{0.9})*
                                     (glm::translate(jupiter_pointer->getLocalTransform(), glm::fvec3{jupiter_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(jupiter_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   jupiter_holder_pointer->addChild(jupiter_pointer);
-  scene.geometry_nodes_.push_back(jupiter_pointer);
+  scene_.geometry_nodes_.push_back(jupiter_pointer);
 
   //holder node for saturn
   Node saturn_holder{root_pointer, "saturn_holder"};
@@ -231,12 +239,13 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   saturn_pointer->setGeometry(planet_model);
   float saturn_distance = 12.0f;
+  saturn_pointer->set_texture_path("saturnmap.png");
   saturn_pointer->setDistanceToCenter(saturn_distance);
   saturn_pointer->setLocalTransform(glm::scale(saturn_pointer->getLocalTransform(), glm::fvec3{1.0f})*
                                     (glm::translate(saturn_pointer->getLocalTransform(), glm::fvec3{saturn_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(saturn_pointer->getLocalTransform(), float(glfwGetTime())* 0.7f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   saturn_holder_pointer->addChild(saturn_pointer);
-  scene.geometry_nodes_.push_back(saturn_pointer);
+  scene_.geometry_nodes_.push_back(saturn_pointer);
 
   //holder node for uranus
   Node uranus_holder{root_pointer, "uranus_holder"};
@@ -254,7 +263,7 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
                                     (glm::translate(uranus_pointer->getLocalTransform(), glm::fvec3{uranus_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(uranus_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   uranus_holder_pointer->addChild(uranus_pointer);
-  scene.geometry_nodes_.push_back(uranus_pointer);
+  scene_.geometry_nodes_.push_back(uranus_pointer);
 
   //holder node for neptune
   Node neptune_holder{root_pointer, "neptune_holder"};
@@ -266,28 +275,38 @@ SceneGraph ApplicationSolar::createPlanetSystem() const{
   GeometryNode neptune{neptune_holder_pointer, "neptune", {0.3f, 0.9f, 1.0f}}; 
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   neptune_pointer->setGeometry(planet_model);
+  neptune_pointer->set_texture_path("neptunemap.png");
   float neptune_distance = 15.0f;
   neptune_pointer->setDistanceToCenter(neptune_distance);
   neptune_pointer->setLocalTransform(glm::scale(neptune_pointer->getLocalTransform(), glm::fvec3{0.5})*
                                     (glm::translate(neptune_pointer->getLocalTransform(), glm::fvec3{neptune_distance, 0.0f, 0.0f}))*
                                     (glm::rotate(neptune_pointer->getLocalTransform(), float(glfwGetTime())* 1.0f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   neptune_holder_pointer->addChild(neptune_pointer);
-  scene.geometry_nodes_.push_back(neptune_pointer);
+  scene_.geometry_nodes_.push_back(neptune_pointer);
 
   //calling to print the sceneGraph. Currently keeps printing. Ideally print once,
-  scene.printGraph();
+  scene_.printGraph();
 
   //calling function to draw the objects (transform from object to world space and send to GPU)
   //giving children to be recursive -> maybe changing to iterative and giving the scene itself
-  return scene;
+  //return scene;
 }
 
 //gets vector of pointers to children and draws everything in the scenegraph, which is below the root------------------------------------------------------
-void ApplicationSolar::drawGraph(SceneGraph scene) const{
+void ApplicationSolar::drawGraph() const{
 
-   for (auto current_node : scene.geometry_nodes_) {
+  int i = 0;
+   for (auto current_node : scene_.geometry_nodes_) {
         //world transform first rotate then translate, because order makes a difference! 
+        
+
+        glm::mat4 pl = planet->getParent()->getLocalTransform();
+        glm::mat4 rm = {};
+        rm = glm::rotate(glm::mat4x4{}, 0.0005f, glm::fvec3(0.0f, 1.0f, 0.0f));
+        current_node->getParent()->setLocalTransform(rm*pl);
+
         glm::fmat4 model_matrix = current_node->getWorldTransform();
+
 
         glUseProgram(m_shaders.at("planet").handle);
         // extra matrix for normal transformation to keep them orthogonal to surface
@@ -301,17 +320,14 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
         // bind the VAO to draw
         glBindVertexArray(planet_object.vertex_AO);
 
-        //Setting the Uniforms for the specified location (first argument) and second are the colors (rgb) from planets ***************
+
         glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "planet_color"),
                   current_node->getColor()[0],current_node->getColor()[1],current_node->getColor()[2] );
 
-        //*****************************************************************************************************************************
-        for (auto light : scene.point_light_nodes_) {
+        for (auto light : scene_.point_light_nodes_) {
             glm::fvec3 light_color = light->getLightColor();
             float light_intensity = light->getLightIntensity();
-            glm::fvec4 light_position = light->getWorldTransform()*glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f); //World Transform returns a matrix, so we convert to fvec4 by multiplication
-
-            //sending data to the shaders (setting uniforms) --> important to upate shader at simple frag
+            glm::fvec4 light_position = light->getWorldTransform()*glm::fvec4(0.0f, 0.0f, 0.0f, 1.0f); 
             glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "light_color"),
                         light_color[0],light_color[1], light_color[2]);
             glUniform1f(glGetUniformLocation(m_shaders.at("planet").handle, "light_intensity"),
@@ -321,8 +337,19 @@ void ApplicationSolar::drawGraph(SceneGraph scene) const{
 
         }
 
+        //get texture object abd activate index, bind with handle und uniform hochladen! 
+
+        texture_object texture = current_node->get_texture_obj();
+
+
+        glActiveTexture(GL_TEXTURE1+i);
+        glBindTexture(texture.target, texture.handle);
+
+        glUniform1i(glGetUniformLocation(m_shaders.at("planet").handle,"TextureSampler"), texture.handle);
+
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+        i++;
       }
 
 }
@@ -357,10 +384,10 @@ void ApplicationSolar::createOrbits() {
   orbit_object.num_elements = GLsizei(points_in_circle);
 }
 
-void ApplicationSolar::drawOrbits(SceneGraph const& scene) const{
+void ApplicationSolar::drawOrbits(){
 
   //go through planets and get distance and set as radius -> scale of circle. not yet correct
-  for (auto const& planet : scene.geometry_nodes_) {
+  for (auto const& planet : scene_.geometry_nodes_) {
       glm::fmat4 orbit_matrix = glm::fmat4{1.0f};
       float radius = planet->getDistanceToCenter();
       orbit_matrix = glm::scale(orbit_matrix, glm::fvec3{radius, radius, radius});
@@ -507,7 +534,7 @@ void ApplicationSolar::initializeShaderPrograms() {
 
 // load models
 void ApplicationSolar::initializeGeometry() {
-  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL  | model::TEXCOORD);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);
@@ -537,13 +564,64 @@ void ApplicationSolar::initializeGeometry() {
   // configure currently bound array buffer
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, model::INDEX.size * planet_model.indices.size(), planet_model.indices.data(), GL_STATIC_DRAW);
 
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::TEXCOORD]);
+
+
   // store type of primitive to draw
   planet_object.draw_mode = GL_TRIANGLES;
   // transfer number of indices to model object 
   planet_object.num_elements = GLsizei(planet_model.indices.size());
 }
 
+void ApplicationSolar::initializeTexture(){
 
+  int i = 0;
+   for (auto current_node : scene_.geometry_nodes_) {
+
+        //Texture2 because we need inital value
+        glActiveTexture(GL_TEXTURE1+i);
+        pixel_data planet_texture = texture_loader::file(m_resource_path + "textures/" + current_node->get_texture_path());
+        GLsizei width = planet_texture.width;
+        GLsizei height = planet_texture.height;
+        GLenum format = planet_texture.channels;
+        GLenum type = planet_texture.channel_type;
+
+        //TEXTURE OBJECT can be found in structs.hpp -> has handle and target
+        texture_object texture;
+
+        glGenTextures(1, &texture.handle);
+        texture.target = GL_TEXTURE_2D;
+
+        current_node->set_texture_obj(texture);
+        glBindTexture(GL_TEXTURE_2D, texture.handle);
+
+
+        //sets wrap parameter for texture coordinate as desired T,S,R as texture coordinates
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        //glTexImage2D(target, level, internalformat, widht, height, border, format, type, data)
+        /*
+          target = binding point for texture, usually GL_TEXTURE...
+          level = number of levels of detail (0 if base image)
+          internalformat: internal format of texture (get from texture file)
+          width, height = dimensions of texture image if 2D
+          border = thickness of border (0 for none)
+          format = format of texel data should match internalformat
+          type = data type of texel data
+          data = pointer to texture
+        */
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, type, planet_texture.ptr());
+
+        i++;
+      }
+
+}
 
 ///////////////////////////// callback functions for window events ////////////
 // handle key input: W,S for Zoom and arrow keys for positioning

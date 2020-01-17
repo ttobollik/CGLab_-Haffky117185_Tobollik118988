@@ -9,6 +9,8 @@ SceneGraph* SceneGraph::getInstance(std::string name, std::shared_ptr<Node> root
 	return scene_graph_instance_;
 }
 **/
+SceneGraph::SceneGraph(){};
+
 //constructor
 SceneGraph::SceneGraph(std::string name, std::shared_ptr<Node> root): 
 	name_{name},

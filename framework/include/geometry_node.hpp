@@ -2,6 +2,7 @@
 #define GEOMETRY_NODE_HPP
 #include <node.hpp>
 #include <model.hpp>
+#include <structs.hpp>
 
 /*
 Geometry Node inherits from Node and we can set Geometry (usually obj file)
@@ -22,11 +23,18 @@ class GeometryNode : public Node {
 		glm::fvec3 getColor();
 		//setter for geometry node using a model
 		void setGeometry(model const& model);
+		void set_texture_path(std::string const& path);
+		std::string get_texture_path();
+
+		void set_texture_obj(texture_object tex_obj);
+		texture_object get_texture_obj();
 
 	private:
 		//model attribute for gemometry node
 		model geometry_;
 		glm::fvec3 color_;
+		std::string texture_path_;
+		texture_object texture_obj_;
 
 };
 #endif
