@@ -37,13 +37,14 @@ class ApplicationSolar : public Application {
 
   void drawGraph() const;
   void drawStars() const;
-  void drawOrbits();
+  void drawOrbits()const;
 
 
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
   void initializeTexture();
+  void initializeSkybox();
   // update uniform values
   void uploadUniforms();
   // upload projection matrix
@@ -55,9 +56,8 @@ class ApplicationSolar : public Application {
   model_object planet_object;
   model_object star_object;
   model_object orbit_object;
+  model_object skybox_object;
   
-
-
   
   // camera transform matrix
   glm::fmat4 m_view_transform;

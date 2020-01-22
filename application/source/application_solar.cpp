@@ -63,7 +63,7 @@ void ApplicationSolar::render() const {
   drawGraph();
 
   //glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
-  //drawOrbits(scene);
+  //drawOrbits();
 
   glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
   drawStars();
@@ -103,7 +103,7 @@ void ApplicationSolar::createPlanetSystem(){
   scene_.camera_ = camera_pointer;
 
   //pointLightNode
-  PointLightNode sun_light{root_pointer, "sunlight", 1.0f, {1.0f, 1.0f, 1.0f}};
+  PointLightNode sun_light{root_pointer, "sunlight", 1.3f, {1.0f, 1.0f, 1.0f}};
   auto sunlight_pointer = std::make_shared<PointLightNode>(sun_light);
   root_pointer->addChild(sunlight_pointer);
   scene_.point_light_nodes_.push_back(sunlight_pointer);
@@ -121,7 +121,7 @@ void ApplicationSolar::createPlanetSystem(){
   //holder node for merkury
   Node merkury_holder{root_pointer, "merkury_holder"};
   auto merkury_holder_pointer = std::make_shared<Node>(merkury_holder);
-  merkury_holder_pointer->setLocalTransform(glm::rotate(merkury_holder_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  merkury_holder_pointer->setLocalTransform(glm::rotate(merkury_holder_pointer->getLocalTransform(), float(glfwGetTime())* 1.9f, glm::fvec3{0.0f, 1.0f, 0.0f}));
   root_pointer->addChild(merkury_holder_pointer);
 
   //merkury
@@ -159,7 +159,7 @@ void ApplicationSolar::createPlanetSystem(){
   //holder node for earth
   Node earth_holder{root_pointer, "earth_holder"};
   auto earth_holder_pointer = std::make_shared<Node>(earth_holder);
-  earth_holder_pointer->setLocalTransform(glm::rotate(earth_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.4f, glm::fvec3{0.0f, 1.0f, 0.0f}));
+  earth_holder_pointer->setLocalTransform(glm::rotate(earth_holder_pointer->getLocalTransform(), float(glfwGetTime())* 0.2f, glm::fvec3{0.0f, 1.0f, 0.0f}));
   root_pointer->addChild(earth_holder_pointer);
 
   //earth
@@ -167,11 +167,11 @@ void ApplicationSolar::createPlanetSystem(){
   auto earth_pointer = std::make_shared<GeometryNode>(earth);
   earth_pointer->setGeometry(planet_model);
   earth_pointer->set_texture_path("earthmap.png");
-  float earth_distance = 14.0f;
+  float earth_distance = 20.0f;
   earth_pointer->setDistanceToCenter(earth_distance);
   earth_pointer->setLocalTransform(glm::scale(earth_pointer->getLocalTransform(), glm::fvec3{0.3})*
                                     (glm::translate(earth_pointer->getLocalTransform(), glm::fvec3{earth_distance, 0.0f, 0.0f}))*
-                                    (glm::rotate(earth_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+                                    (glm::rotate(earth_pointer->getLocalTransform(), float(glfwGetTime())* 2.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   earth_holder_pointer->addChild(earth_pointer);
   scene_.geometry_nodes_.push_back(earth_pointer);
 
@@ -187,7 +187,7 @@ void ApplicationSolar::createPlanetSystem(){
   moon_pointer->setGeometry(planet_model);
   moon_pointer->setLocalTransform(glm::scale(moon_pointer->getLocalTransform(), glm::fvec3{0.3})*
                                     (glm::translate(moon_pointer->getLocalTransform(), glm::fvec3{5.0f, 0.0f, 0.0f}))*
-                                    (glm::rotate(moon_pointer->getLocalTransform(), float(glfwGetTime())* 1.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
+                                    (glm::rotate(moon_pointer->getLocalTransform(), float(glfwGetTime())* 3.2f, glm::fvec3{0.0f, 1.0f, 0.0f})));
   moon_holder_pointer->addChild(moon_pointer);
   scene_.geometry_nodes_.push_back(moon_pointer);
 
@@ -220,7 +220,7 @@ void ApplicationSolar::createPlanetSystem(){
   auto jupiter_pointer = std::make_shared<GeometryNode>(jupiter);
   jupiter_pointer->setGeometry(planet_model);
   jupiter_pointer->set_texture_path("jupitermap.png");
-  float jupiter_distance = 10.0f;
+  float jupiter_distance = 40.0f;
   jupiter_pointer->setDistanceToCenter(jupiter_distance);
   jupiter_pointer->setLocalTransform(glm::scale(jupiter_pointer->getLocalTransform(), glm::fvec3{0.9})*
                                     (glm::translate(jupiter_pointer->getLocalTransform(), glm::fvec3{jupiter_distance, 0.0f, 0.0f}))*
@@ -238,7 +238,7 @@ void ApplicationSolar::createPlanetSystem(){
   GeometryNode saturn{saturn_holder_pointer, "saturn", {0.694f, 0.052f, 0.788f}}; 
   auto saturn_pointer = std::make_shared<GeometryNode>(saturn);
   saturn_pointer->setGeometry(planet_model);
-  float saturn_distance = 12.0f;
+  float saturn_distance = 50.0f;
   saturn_pointer->set_texture_path("saturnmap.png");
   saturn_pointer->setDistanceToCenter(saturn_distance);
   saturn_pointer->setLocalTransform(glm::scale(saturn_pointer->getLocalTransform(), glm::fvec3{1.0f})*
@@ -257,7 +257,7 @@ void ApplicationSolar::createPlanetSystem(){
   GeometryNode uranus{uranus_holder_pointer, "uranus", {1.0f, 1.0f, 1.0f}}; 
   auto uranus_pointer = std::make_shared<GeometryNode>(uranus);
   uranus_pointer->setGeometry(planet_model);
-  float uranus_distance = 50.0f;
+  float uranus_distance = 60.0f;
   uranus_pointer->setDistanceToCenter(uranus_distance);
   uranus_pointer->setLocalTransform(glm::scale(uranus_pointer->getLocalTransform(), glm::fvec3{0.2})*
                                     (glm::translate(uranus_pointer->getLocalTransform(), glm::fvec3{uranus_distance, 0.0f, 0.0f}))*
@@ -276,7 +276,7 @@ void ApplicationSolar::createPlanetSystem(){
   auto neptune_pointer = std::make_shared<GeometryNode>(neptune);
   neptune_pointer->setGeometry(planet_model);
   neptune_pointer->set_texture_path("neptunemap.png");
-  float neptune_distance = 15.0f;
+  float neptune_distance = 70.0f;
   neptune_pointer->setDistanceToCenter(neptune_distance);
   neptune_pointer->setLocalTransform(glm::scale(neptune_pointer->getLocalTransform(), glm::fvec3{0.5})*
                                     (glm::translate(neptune_pointer->getLocalTransform(), glm::fvec3{neptune_distance, 0.0f, 0.0f}))*
@@ -296,13 +296,14 @@ void ApplicationSolar::createPlanetSystem(){
 void ApplicationSolar::drawGraph() const{
 
   int i = 0;
-   for (auto current_node : scene_.geometry_nodes_) {
-        //world transform first rotate then translate, because order makes a difference! 
-        
+   for (auto current_node : scene_.geometry_nodes_) {        
 
-        glm::mat4 pl = planet->getParent()->getLocalTransform();
+        glm::mat4 pl = current_node->getParent()->getLocalTransform();
+
         glm::mat4 rm = {};
-        rm = glm::rotate(glm::mat4x4{}, 0.0005f, glm::fvec3(0.0f, 1.0f, 0.0f));
+
+        rm = glm::rotate(glm::mat4x4{}, current_node->getSpeed()*0.0001f, glm::fvec3(0.0f, 1.0f, 0.0f));
+
         current_node->getParent()->setLocalTransform(rm*pl);
 
         glm::fmat4 model_matrix = current_node->getWorldTransform();
@@ -334,6 +335,14 @@ void ApplicationSolar::drawGraph() const{
                         light_intensity);
             glUniform3f(glGetUniformLocation(m_shaders.at("planet").handle, "light_position"),
                         light_position[0],light_position[1], light_position[2]);
+            if (current_node->getName() == "sun") {
+              glUniform1f(glGetUniformLocation(m_shaders.at("planet").handle, "sun"),
+                        1.0f);
+            } else {
+              glUniform1f(glGetUniformLocation(m_shaders.at("planet").handle, "sun"),
+                        0.0f);
+            }
+            
 
         }
 
@@ -345,7 +354,7 @@ void ApplicationSolar::drawGraph() const{
         glActiveTexture(GL_TEXTURE1+i);
         glBindTexture(texture.target, texture.handle);
 
-        glUniform1i(glGetUniformLocation(m_shaders.at("planet").handle,"TextureSampler"), texture.handle);
+        glUniform1i(glGetUniformLocation(m_shaders.at("planet").handle,"Texture"), texture.handle);
 
         // draw bound vertex array using bound shader
         glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
@@ -384,7 +393,7 @@ void ApplicationSolar::createOrbits() {
   orbit_object.num_elements = GLsizei(points_in_circle);
 }
 
-void ApplicationSolar::drawOrbits(){
+void ApplicationSolar::drawOrbits() const{
 
   //go through planets and get distance and set as radius -> scale of circle. not yet correct
   for (auto const& planet : scene_.geometry_nodes_) {
@@ -475,6 +484,13 @@ void ApplicationSolar::uploadView() {
   glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(view_matrix));
 
+  /*
+
+  glUseProgram(m_shaders.at("skybox").handle);
+  glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"),
+                     1, GL_FALSE, glm::value_ptr(view_matrix));
+
+  */
 
 
 }
@@ -492,6 +508,12 @@ void ApplicationSolar::uploadProjection() {
   glUseProgram(m_shaders.at("orbit").handle);
   glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
+
+/*
+  glUseProgram(m_shaders.at("skybox").handle);
+  glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ProjectionMatrix"),
+                     1, GL_FALSE, glm::value_ptr(m_view_projection));
+                     */
 }
 
 // update uniform locations
@@ -529,6 +551,48 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("orbit").u_locs["OrbitMatrix"] = -1;
   m_shaders.at("orbit").u_locs["ViewMatrix"] = -1;
   m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
+
+
+/*
+  m_shaders.emplace("skybox", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/skybox.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/skybox.frag"}}});
+  // request uniform locations for shader program
+  m_shaders.at("skybox").u_locs["NormalMatrix"] = -1;
+  m_shaders.at("skybox").u_locs["ViewMatrix"] = -1;
+  m_shaders.at("skybox").u_locs["ProjectionMatrix"] = -1;
+  */
+
+}
+
+void ApplicationSolar::initializeSkybox() {
+
+  //LearnOpenGL Cubemaps
+/*
+  uint textureID;
+  glGenTextures(1, &textureID);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+  pixel_data RIGHT = texture_loader::file(m_resource_path + "textures/dispair-ridge_rt.tga");
+  pixel_data LEFT = texture_loader::file(m_resource_path + "textures/dispair-ridge_lf.tga");
+  pixel_data TOP = texture_loader::file(m_resource_path + "textures/dispair-ridge_up.tga");
+  pixel_data BOTTOM = texture_loader::file(m_resource_path + "textures/dispair-ridge_dn.tga");
+  pixel_data BACK = texture_loader::file(m_resource_path + "textures/dispair-ridge_bk.tga");
+  pixel_data FRONT = texture_loader::file(m_resource_path + "textures/dispair-ridge_ft.tga");
+
+  GLsizei width = RIGHT.width;
+  GLsizei height = RIGHT.height;
+
+
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, RIGHT);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, LEFT);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, TOP);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, BOTTOM);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, BACK);
+  glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, FRONT);
+
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+*/
 
 }
 
