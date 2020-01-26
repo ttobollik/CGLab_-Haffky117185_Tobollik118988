@@ -23,6 +23,55 @@ using namespace gl;
 #include <iostream>
 
 
+
+float quadVertices[] = {
+  //hard coded first triangle
+  -1.0f, 1.0f, 0.0f, 1.0f,
+  -1.0f, -1.0f, 0.0f, 0.0f,
+  1.0f, -1.0f, 1.0f, 0.0f,
+
+  //hard coded second triangle
+  -1.0f, 1.0f, 0.0f, 1.0f,
+  1.0f, -1.0f, 1.0f, 0.0f,
+  1.0f, 1.0f, 1.0f, 1.0f
+};
+
+
+
+
+void ApplicationSolar::generateQuadObjects() const{
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0); //zero is the default framebuffer
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT); 
+  glDisable(GL_DEPTH_TEST); //depth test unnecessary because we just render a texture 
+
+  unsigned int quadVAO, quadVBO;
+  glGenVertexArrays(1, &quadVAO);
+  glGenBuffers(1, &quadVBO);
+
+  glBindVertexArray(quadVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2*sizeof(float)));
+
+
+  glUseProgram(m_shaders.at("quad").handle);
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, texture_framebuffer.handle);
+
+  glUniform1i(m_shaders.at("quad").u_locs.at("TextureFragment"), 2);
+  
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+
 //constructor
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -39,6 +88,8 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeGeometry();
   initializeShaderPrograms();
   createOrbits();
+  initializeFrameBuffer();
+
 }
 
 //destructor
@@ -55,11 +106,14 @@ ApplicationSolar::~ApplicationSolar() {
 }
 
 void ApplicationSolar::render() const {
-  //SceneGraph scene = createPlanetSystem();
-  //calling the function to create planets
+
+  //first we bind the framebuffer and render everything to it
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
 
   glBindBuffer(GL_ARRAY_BUFFER, planet_object.vertex_BO);
-  //initializeTexture();
   drawGraph();
 
   //glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
@@ -67,6 +121,11 @@ void ApplicationSolar::render() const {
 
   glBindBuffer(GL_ARRAY_BUFFER, star_object.vertex_BO);
   drawStars();
+
+
+  //now it is time to go back to the default framebuffer - here we want to use the color attachment from the framebuffer to render it to a quad
+  generateQuadObjects();
+  
 
 }
 
@@ -514,6 +573,8 @@ void ApplicationSolar::uploadProjection() {
   glUniformMatrix4fv(m_shaders.at("skybox").u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
                      */
+
+
 }
 
 // update uniform locations
@@ -553,6 +614,13 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("orbit").u_locs["ProjectionMatrix"] = -1;
 
 
+  m_shaders.emplace("quad", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/framebuffer.vert"},
+                                           {GL_FRAGMENT_SHADER, m_resource_path + "shaders/framebuffer.frag"}}});
+  // request uniform locations for shader program
+  m_shaders.at("quad").u_locs["TextureFragment"] = -1;
+
+
+
 /*
   m_shaders.emplace("skybox", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/skybox.vert"},
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/skybox.frag"}}});
@@ -561,6 +629,59 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("skybox").u_locs["ViewMatrix"] = -1;
   m_shaders.at("skybox").u_locs["ProjectionMatrix"] = -1;
   */
+
+}
+
+void ApplicationSolar::initializeFrameBuffer(){
+
+//need to define depth and color buffer and then bind to framebuffer (color for us will be texture as defined in exercise)
+
+
+//generating Depth buffer so we can bind it via its handle to the frame buffer
+  glGenRenderbuffers(1, &renderbuffer_framebuffer.handle);
+  glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer_framebuffer.handle);
+
+  //to create deoth and stencilbuffer object we need renderbuffersotrage functin (learn open gl - framebuffers)
+  //for internal format we could also use DEPTH24_STENCIL8
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, initial_resolution[0], initial_resolution[1]);
+
+
+//generating Texture for Color (similar to learn open gl website)
+
+  glActiveTexture(GL_TEXTURE2); //1 is for planet textures
+  glGenTextures(1, &texture_framebuffer.handle);
+  //first parameter is render target
+  glBindTexture(GL_TEXTURE_2D, texture_framebuffer.handle); //need to bind it so abz subsequent texture commands will configure the currently bound texture
+
+
+  //if we use texture the result is stored as texture and is easily used in shaders
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+
+  //texture target (2D means will generate texture on currently cound texture object), mipmap level (0 is base)
+  //tells OpenGl what kind of format we want to store texture, width and height of window, legacy stuff always zero
+  //format and data tzpe of source image, image data
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, initial_resolution[0], initial_resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+
+
+//defining FramBuffer
+  glGenFramebuffers(1, &framebuffer.handle);
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
+
+  //define attachments -> for us the texture as color attachment and the renderbuffer as depth attachment
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture_framebuffer.handle, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer_framebuffer.handle);
+
+  //define which buffers to write. we only have one currently. creates an array with enums which all represent color attachments
+  GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, draw_buffers);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    std::cout<<" Framebuffer was not applied. "<<std::endl;
+  }
 
 }
 

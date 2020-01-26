@@ -45,7 +45,9 @@ class ApplicationSolar : public Application {
   void initializeGeometry();
   void initializeTexture();
   void initializeSkybox();
-  // update uniform values
+  void initializeFrameBuffer(); //necessary for texture bound to framebuffer
+  void generateQuadObjects() const;
+  // update uniform value
   void uploadUniforms();
   // upload projection matrix
   void uploadProjection();
@@ -57,6 +59,11 @@ class ApplicationSolar : public Application {
   model_object star_object;
   model_object orbit_object;
   model_object skybox_object;
+
+  texture_object texture_framebuffer;
+  texture_object renderbuffer_framebuffer;
+  texture_object framebuffer;
+
   
   
   // camera transform matrix
