@@ -24,7 +24,7 @@ using namespace gl;
 
 
 
-float quadVertices[] = {
+std::vector<GLfloat> quadVertices = {
   //hard coded first triangle
   -1.0f, 1.0f, 0.0f, 1.0f,
   -1.0f, -1.0f, 0.0f, 0.0f,
@@ -53,12 +53,12 @@ void ApplicationSolar::generateQuadObjects() const{
   glBindVertexArray(quadVAO);
   glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*quadVertices.size(), quadVertices.data(), GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GLsizei(4 * sizeof(float)), (void*)0);
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2*sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(4 * sizeof(float)), (void*)(2*sizeof(float)));
 
 
   glUseProgram(m_shaders.at("quad").handle);
@@ -88,7 +88,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializeGeometry();
   initializeShaderPrograms();
   createOrbits();
-  initializeFrameBuffer();
+  initializeFrameBuffer(initial_resolution.x, initial_resolution.y);
 
 }
 
@@ -632,7 +632,7 @@ void ApplicationSolar::initializeShaderPrograms() {
 
 }
 
-void ApplicationSolar::initializeFrameBuffer(){
+void ApplicationSolar::initializeFrameBuffer(unsigned width, unsigned height){
 
 //need to define depth and color buffer and then bind to framebuffer (color for us will be texture as defined in exercise)
 
@@ -643,7 +643,7 @@ void ApplicationSolar::initializeFrameBuffer(){
 
   //to create deoth and stencilbuffer object we need renderbuffersotrage functin (learn open gl - framebuffers)
   //for internal format we could also use DEPTH24_STENCIL8
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, initial_resolution[0], initial_resolution[1]);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
 
 
 //generating Texture for Color (similar to learn open gl website)
@@ -654,16 +654,15 @@ void ApplicationSolar::initializeFrameBuffer(){
   glBindTexture(GL_TEXTURE_2D, texture_framebuffer.handle); //need to bind it so abz subsequent texture commands will configure the currently bound texture
 
 
-  //if we use texture the result is stored as texture and is easily used in shaders
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-
-
   //texture target (2D means will generate texture on currently cound texture object), mipmap level (0 is base)
   //tells OpenGl what kind of format we want to store texture, width and height of window, legacy stuff always zero
   //format and data tzpe of source image, image data
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, initial_resolution[0], initial_resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+
+  //if we use texture the result is stored as texture and is easily used in shaders
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
 
@@ -853,6 +852,8 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
   m_view_projection = utils::calculate_projection_matrix(float(width) / float(height));
   // upload new projection matrix
   uploadProjection();
+  initializeFrameBuffer(width, height);
+
 }
 
 

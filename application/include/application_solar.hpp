@@ -45,7 +45,7 @@ class ApplicationSolar : public Application {
   void initializeGeometry();
   void initializeTexture();
   void initializeSkybox();
-  void initializeFrameBuffer(); //necessary for texture bound to framebuffer
+  void initializeFrameBuffer(unsigned width, unsigned height); //necessary for texture bound to framebuffer
   void generateQuadObjects() const;
   // update uniform value
   void uploadUniforms();
