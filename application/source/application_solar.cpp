@@ -36,6 +36,11 @@ std::vector<GLfloat> quadVertices = {
   1.0f, 1.0f, 1.0f, 1.0f
 };
 
+bool greyscale = false;
+bool horizontalMirror = false;
+bool verticalMirror = false;
+bool blur = false;
+
 
 
 
@@ -407,10 +412,10 @@ void ApplicationSolar::drawGraph() const{
 
         //get texture object abd activate index, bind with handle und uniform hochladen! 
 
-        texture_object texture = current_node->get_texture_obj();
+        texture_object texture = current_node->get_texture_obj(); /****************receive texture*/
 
 
-        glActiveTexture(GL_TEXTURE1+i);
+        glActiveTexture(GL_TEXTURE1+i); /***************bind texture*/
         glBindTexture(texture.target, texture.handle);
 
         glUniform1i(glGetUniformLocation(m_shaders.at("planet").handle,"Texture"), texture.handle);
@@ -543,6 +548,12 @@ void ApplicationSolar::uploadView() {
   glUniformMatrix4fv(m_shaders.at("orbit").u_locs.at("ViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(view_matrix));
 
+  glUseProgram(m_shaders.at("quad").handle);
+  glUniform1i(m_shaders.at("quad").u_locs.at("greyscale"), greyscale);
+  glUniform1i(m_shaders.at("quad").u_locs.at("horizontalMirror"), horizontalMirror);
+  glUniform1i(m_shaders.at("quad").u_locs.at("verticalMirror"), verticalMirror);
+  glUniform1i(m_shaders.at("quad").u_locs.at("blur"), blur);
+
   /*
 
   glUseProgram(m_shaders.at("skybox").handle);
@@ -618,6 +629,10 @@ void ApplicationSolar::initializeShaderPrograms() {
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/framebuffer.frag"}}});
   // request uniform locations for shader program
   m_shaders.at("quad").u_locs["TextureFragment"] = -1;
+  m_shaders.at("quad").u_locs["greyscale"] = 0;
+  m_shaders.at("quad").u_locs["horizontalMirror"] = 0;
+  m_shaders.at("quad").u_locs["verticalMirror"] = 0;
+  m_shaders.at("quad").u_locs["blur"] = 0;
 
 
 
@@ -763,7 +778,7 @@ void ApplicationSolar::initializeTexture(){
   int i = 0;
    for (auto current_node : scene_.geometry_nodes_) {
 
-        //Texture2 because we need inital value
+        //Texture1+i because we need inital value. Because we iterate through nodes, every planet will be assigned own texture object
         glActiveTexture(GL_TEXTURE1+i);
         pixel_data planet_texture = texture_loader::file(m_resource_path + "textures/" + current_node->get_texture_path());
         GLsizei width = planet_texture.width;
@@ -777,7 +792,7 @@ void ApplicationSolar::initializeTexture(){
         glGenTextures(1, &texture.handle);
         texture.target = GL_TEXTURE_2D;
 
-        current_node->set_texture_obj(texture);
+        current_node->set_texture_obj(texture); /********************************important to bind here*/
         glBindTexture(GL_TEXTURE_2D, texture.handle);
 
 
@@ -792,7 +807,7 @@ void ApplicationSolar::initializeTexture(){
         //glTexImage2D(target, level, internalformat, widht, height, border, format, type, data)
         /*
           target = binding point for texture, usually GL_TEXTURE...
-          level = number of levels of detail (0 if base image)
+          level = number of levels of detail (0 if base image) --> if mipmap, we could show here
           internalformat: internal format of texture (get from texture file)
           width, height = dimensions of texture image if 2D
           border = thickness of border (0 for none)
@@ -829,7 +844,20 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   } else if (key == GLFW_KEY_RIGHT  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{-0.3f, 0.0f, 0.0f}); //transforms view on up key press 3 in x direction
     uploadView();
+  } else if (key == GLFW_KEY_7  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    greyscale ? greyscale = false : greyscale = true; //transforms view on up key press 3 in x direction
+    uploadView();
+  } else if (key == GLFW_KEY_8  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    horizontalMirror ? horizontalMirror = false : horizontalMirror = true; //transforms view on up key press 3 in x direction
+    uploadView();
+  } else if (key == GLFW_KEY_9  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    verticalMirror ? verticalMirror = false : verticalMirror = true; //transforms view on up key press 3 in x direction
+    uploadView();
+  } else if (key == GLFW_KEY_0  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    blur ? blur = false : blur = true; //transforms view on up key press 3 in x direction
+    uploadView();
   }
+
 
 }
 

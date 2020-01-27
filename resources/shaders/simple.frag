@@ -19,7 +19,7 @@ vec3 diffuse_color = vec3(0.3f, 0.3f, 0.3f);
 vec3 specular_color = vec3(1.0f, 1.0f, 1.0f);
 float alpha = 0;
 
-uniform sampler2D Texture;
+uniform sampler2D Texture; /***texture***/
 
 void main() {
 

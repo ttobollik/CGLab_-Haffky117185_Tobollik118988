@@ -73,6 +73,8 @@ class ApplicationSolar : public Application {
 
   SceneGraph scene_;
 
+  
+
 };
 
 #endif
